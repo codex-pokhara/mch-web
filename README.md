@@ -8,8 +8,8 @@ A production-ready React boilerplate with authentication, routing, API utilities
 - 🔐 **Authentication**: Context-based auth system with JWT support
 - 🚦 **Routing**: Protected & public routes with React Router
 - 📡 **API Client**: Axios-based request utility with interceptors
-- 🎨 **Styling**: CSS Modules support with utility class helpers
-- 🔄 **State Management**: React Query for server state
+- 🎨 **Styling**: TailwindCss and Shadcn UI
+- 🔄 **State Management**: React Query for server state & context api for client state
 - 🧹 **Code Quality**: ESLint for linting
 - ⚡ **Performance**: Code splitting, lazy loading, and top progress bar
 
@@ -44,10 +44,8 @@ src/
 ├── contexts/         # React contexts
 ├── hooks/            # Custom hooks
 ├── lib/              # Utility functions
-├── pages/            # Page components
-├── routes/           # Route configuration
-├── styles/           # Global styles
-├── App.tsx           # Main app component
+├── pages/            # Page components├── styles/           # Global styles
+├── App/App.tsx           # Main app component
 └── main.tsx          # Entry point
 ```
 
@@ -76,9 +74,8 @@ src/
 The GitHub Actions workflow (`.github/workflows/ci.yml`) includes:
 
 1. **Linting**: Runs ESLint on every push
-2. **Testing**: (Configure your test commands)
-3. **Build**: Production build verification
-4. **Deployment**: (Configure your deployment steps)
+2. **Build**: Production build verification
+3. **Deployment**: (Configure your deployment steps)
 
 ## Available Scripts
 
@@ -92,7 +89,6 @@ The GitHub Actions workflow (`.github/workflows/ci.yml`) includes:
 | Variable | Description |
 |----------|-------------|
 | `VITE_APP_SERVER_URL` | Base API URL |
-| `VITE_APP_ENVIRONMENT` | `development` or `production` |
 
 ## Contributing
 
