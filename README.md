@@ -1,70 +1,117 @@
-# React + TypeScript + Vite
+# React Frontend Boilerplate
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A production-ready React boilerplate with authentication, routing, API utilities, and responsive layout components.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🛠️ **Modern Tooling**: Built with Vite + React + TypeScript
+- 🔐 **Authentication**: Context-based auth system with JWT support
+- 🚦 **Routing**: Protected & public routes with React Router
+- 📡 **API Client**: Axios-based request utility with interceptors
+- 🎨 **Styling**: CSS Modules support with utility class helpers
+- 🔄 **State Management**: React Query for server state
+- 🧹 **Code Quality**: ESLint for linting
+- ⚡ **Performance**: Code splitting, lazy loading, and top progress bar
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone the repository
+   ```bash
+   git clone https://github.com/your-username/react-boilerplate.git
+   cd react-boilerplate
+   ```
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2. Install dependencies using pnpm
+   ```bash
+   pnpm install
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+3. Create a `.env` file based on `.env.example`
+   ```bash
+   cp .env.example .env
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+4. Start the development server
+   ```bash
+   pnpm dev
+   ```
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable components
+├── contexts/         # React contexts
+├── hooks/            # Custom hooks
+├── lib/              # Utility functions
+├── pages/            # Page components
+├── routes/           # Route configuration
+├── styles/           # Global styles
+├── App.tsx           # Main app component
+└── main.tsx          # Entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Key Implementation Details
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Authentication System
+- JWT token storage in localStorage
+- Auth context with login/logout methods
+- Protected route wrapper
+- Automatic profile fetching on app load
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# frontend-boilerplate-react
+### API Client
+- Axios-based `baseRequest` utility
+- Automatic auth header injection
+- Error handling
+- AbortController support
+
+### Layout System
+- Responsive max-width wrapper
+- Persistent layout with header/footer
+- Scroll restoration
+- Loading indicators
+
+## CI/CD Pipeline
+
+The GitHub Actions workflow (`.github/workflows/ci.yml`) includes:
+
+1. **Linting**: Runs ESLint on every push
+2. **Testing**: (Configure your test commands)
+3. **Build**: Production build verification
+4. **Deployment**: (Configure your deployment steps)
+
+## Available Scripts
+
+- `pnpm dev`: Start development server
+- `pnpm build`: Create production build
+- `pnpm lint`: Run ESLint
+- `pnpm preview`: Preview production build locally
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_APP_SERVER_URL` | Base API URL |
+| `VITE_APP_ENVIRONMENT` | `development` or `production` |
+
+## Contributing
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a pull request
+
+## License
+
+MIT
+
+---
+
+### Additional Recommendations:
+
+1. Add a `CONTRIBUTING.md` for contribution guidelines
+2. Include a `CHANGELOG.md` for version history
+3. Add a `SECURITY.md` for vulnerability reporting
+4. Consider adding a code coverage badge if you implement tests
+5. Add visual examples (screenshots/GIFs) of key features
