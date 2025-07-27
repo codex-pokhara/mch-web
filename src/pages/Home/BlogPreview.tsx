@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Calendar } from 'lucide-react';
 
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+
 function BlogPreview() {
     const blogs = [
         {
@@ -28,7 +30,7 @@ function BlogPreview() {
 
     return (
         <section className="py-16 bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MaxWidthWrapper>
                 <div className="text-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest News & Stories</h2>
                     <p className="text-lg text-gray-600">
@@ -71,7 +73,7 @@ function BlogPreview() {
                         View All Stories
                     </Link>
                 </div>
-            </div>
+            </MaxWidthWrapper>
         </section>
     );
 }

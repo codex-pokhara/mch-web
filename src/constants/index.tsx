@@ -4,19 +4,23 @@ export const navigation = [
         url: '/',
     },
     {
-        title: 'Events',
-        url: '/events',
+        title: 'About Us',
+        url: '/about',
     },
     {
         title: 'Gallery',
         url: '/gallery',
     },
     {
-        title: 'About',
-        url: '/about',
+        title: 'Blog',
+        url: '/blog',
     },
     {
-        title: 'Reports',
-        url: '/reports',
+        title: 'Budget Details',
+        url: '/budget',
+    },
+    {
+        title: 'Contact Us',
+        url: '/contact',
     },
 ];

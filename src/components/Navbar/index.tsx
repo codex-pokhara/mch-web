@@ -52,7 +52,7 @@ export default function Header() {
                         className="flex items-center gap-2"
                     >
                         <img
-                            src=""
+                            src="Vector.png"
                             alt="logo"
                             className="h-14"
                         />
