@@ -41,6 +41,14 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: '/login',
+                    },
+                ],
+            },
+            {
+                element: <ProtectedRoutes />,
+                children: [
+                    {
+                        path: '/account',
                         element: <Login />,
                     },
                 ],
@@ -130,7 +138,7 @@ function App() {
                     src="/ogo.png"
                     loading="lazy"
                 />
-                Frontend Boilerplate loading...
+                Mountain Children Home loading...
             </div>
         );
     }
@@ -147,7 +155,7 @@ function App() {
                             src="/logo.png"
                             loading="lazy"
                         />
-                        Frontend Boilerplate loading...
+                        Mountain Children Home loading...
                     </div>
                 )}
             />
