@@ -21,6 +21,7 @@ import AuthContext, { type AuthState } from '@/contexts/auth';
 import { baseRequest } from '@/lib/base';
 import { setLocalStorage } from '@/lib/utils';
 import About from '@/pages/AboutUs';
+import Gallery from '@/pages/Gallery.tsx';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
             {
                 path: '/about',
                 element: <About />,
+            },
+            {
+                path: '/gallery',
+                element: <Gallery />,
             },
         ],
     },
