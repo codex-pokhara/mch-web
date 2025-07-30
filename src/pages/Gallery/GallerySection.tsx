@@ -75,7 +75,6 @@ function GallerySection(props: GalleryProps) {
                                                 alt={album.name}
                                                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
-                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
                                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                                                 <h3 className="text-white font-semibold text-lg">{album.name}</h3>
                                                 <p className="text-gray-200 text-sm">
@@ -118,7 +117,6 @@ function GallerySection(props: GalleryProps) {
                                                 alt={image.alt}
                                                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
-                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
                                         </div>
                                     </div>
                                 ))}
