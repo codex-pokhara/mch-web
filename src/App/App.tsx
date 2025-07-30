@@ -23,6 +23,8 @@ import { setLocalStorage } from '@/lib/utils';
 import About from '@/pages/AboutUs';
 import Blog from '@/pages/Blog';
 import BlogDetail from '@/pages/BlogDetail';
+import Budget from '@/pages/Budget';
+import ContactUs from '@/pages/ContactUs';
 import Gallery from '@/pages/Gallery';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
@@ -85,6 +87,14 @@ const router = createBrowserRouter([
             {
                 path: '/blog/:id',
                 element: <BlogDetail />,
+            },
+            {
+                path: '/budget',
+                element: <Budget />,
+            },
+            {
+                path: '/contact',
+                element: <ContactUs />,
             },
         ],
     },
