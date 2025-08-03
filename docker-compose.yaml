@@ -1,15 +1,17 @@
 services:
-  mch-web-nextjs:
+  mch-web-react:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        PORT: 8005
     ports:
       - "8005:8005"
-    environment:
-      PORT: 8005
-    command: ["yarn", "start", "-H", "0.0.0.0", '-p', '8005']
+    command: ["serve", "-s", "dist", "-l", "8005"]
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8005 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: 30s       
+      timeout: 5s          
+      retries: 3           
+      start_period: 10s   
+    restart: unless-stopped 

@@ -1,33 +1,32 @@
 FROM node:22-alpine
 
+ARG PORT
+ENV PORT=${PORT}
+
+
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies (including yarn)
-RUN apk add --no-cache \
-    curl \
-    gcc \
-    g++ \
-    make \
-    python3 \
-    yarn
+# Copy package files
+COPY package.json ./
 
-# Copy package files first for better caching
-COPY package.json yarn.lock* ./
+# Install dependencies
+RUN apk add --no-cache curl gcc g++ make python3 python3-dev py3-setuptools py3-pip
 
-# Install project dependencies
-RUN yarn install --frozen-lockfile
+RUN npm install -g pnpm
 
-# Copy all other files
+RUN pnpm install
+
+# Install serve globally
+RUN npm install -g serve
+
+# Copy application files
 COPY . .
 
-# Build Next.js application
-RUN yarn build
+# Build the application
+RUN pnpm run build
+# Expose the desired port
+EXPOSE $PORT
 
-# Environment variables for runtime
-ENV HOST=0.0.0.0
-ENV PORT=8005
-EXPOSE 8005
-
-# Start command (simplified)
-CMD ["yarn", "start"]
+# Command to serve the build folder
+CMD ["serve", "-s", "dist", "-l", $PORT]
