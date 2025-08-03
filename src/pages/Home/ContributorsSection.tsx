@@ -79,7 +79,7 @@ function ContributorsSection() {
                                             />
                                         </div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-2">{contributor.name}</h3>
-                                        <p className="text-blue-600 font-medium text-sm mb-3">{contributor.type}</p>
+                                        <p className="text-primary font-medium text-sm mb-3">{contributor.type}</p>
                                         <p className="text-gray-600 text-sm">{contributor.description}</p>
                                     </div>
                                 </CarouselItem>

@@ -96,7 +96,7 @@ function GallerySection(props: GalleryProps) {
                                     <button
                                         type="button"
                                         onClick={() => setSelectedAlbum(null)}
-                                        className="text-blue-600 hover:text-blue-700 font-medium mb-2"
+                                        className="text-primary hover:text-blue-700 font-medium mb-2"
                                     >
                                         ← Back to Albums
                                     </button>

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import {
     Building,
     Heart,
@@ -59,7 +60,7 @@ function HowToHelpSection() {
                     {urgentNeeds.map((need) => (
                         <div key={need.title} className="bg-blue-50 p-8 rounded-lg hover:bg-blue-100 transition-colors">
                             <div className="flex items-center mb-4">
-                                <div className="text-blue-600 mr-4">{need.icon}</div>
+                                <div className="text-primary mr-4">{need.icon}</div>
                                 <div>
                                     <h3 className="text-xl font-semibold text-gray-900">{need.title}</h3>
                                     <span className={`text-sm px-2 py-1 rounded ${need.priority === 'Critical' && 'bg-red-100 text-red-800'}
@@ -81,14 +82,14 @@ function HowToHelpSection() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {sponsorBenefits.map((benefit) => (
                             <div key={benefit} className="flex items-start">
-                                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                                <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
                                 <p className="text-gray-700">{benefit}</p>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-8 text-white text-center">
+                <div className="bg-primary rounded-lg p-8 text-white text-center">
                     <h3 className="text-2xl font-bold mb-4">Join Our Mission</h3>
                     <p className="text-lg mb-6">
                         Help us build a sustainable,
@@ -96,18 +97,20 @@ function HowToHelpSection() {
                         for climate-resilient childcare in Nepal.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button
-                            className="bg-white text-orange-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-colors"
+                        <Link
+                            to="/contact"
+                            className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-lg font-semibold transition-colors"
                             type="button"
                         >
                             Support Our Mission
-                        </button>
-                        <button
-                            className="border-2 border-white text-white hover:bg-white hover:text-orange-600 px-8 py-3 rounded-lg font-semibold transition-colors"
+                        </Link>
+                        <Link
+                            to="/budget"
+                            className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-lg font-semibold transition-colors"
                             type="button"
                         >
                             View Detailed Budget
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </MaxWidthWrapper>

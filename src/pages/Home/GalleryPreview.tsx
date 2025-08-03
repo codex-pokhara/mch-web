@@ -41,7 +41,6 @@ function GalleryPreview() {
                                 alt={image.alt}
                                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                             />
-                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
                         </div>
                     ))}
                 </div>
@@ -49,7 +48,7 @@ function GalleryPreview() {
                 <div className="text-center">
                     <Link
                         to="/gallery"
-                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                        className="inline-block bg-primary hover:brightness-90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
                     >
                         View Full Gallery
                     </Link>

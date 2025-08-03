@@ -25,6 +25,7 @@ import Blog from '@/pages/Blog';
 import BlogDetail from '@/pages/BlogDetail';
 import Budget from '@/pages/Budget';
 import ContactUs from '@/pages/ContactUs';
+import Event from '@/pages/Event';
 import Gallery from '@/pages/Gallery';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
@@ -96,6 +97,11 @@ const router = createBrowserRouter([
                 path: '/contact',
                 element: <ContactUs />,
             },
+            {
+                path: '/event',
+                element: <Event />,
+            },
+
         ],
     },
 ]);

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import BlogContent from './BlogContent';
+import EventContent from './EventContent';
 
 import HeroSection from '@/components/HeroSection';
 
-function Blog() {
-    const title = 'Our Blog';
-    const description = 'Stay updated with the latest news, stories, and updates from Mountain Children Home. Read about our children&apos;s achievements, ongoing projects, and community impact.';
+function Event() {
+    const title = 'Our Events';
+    const description = 'Stay updated with the latest events and updates from Mountain Children Home. Read about our ongoing projects, and community impact.';
 
     const blogs = [
         {
@@ -86,7 +86,7 @@ function Blog() {
     return (
         <>
             <HeroSection title={title} description={description} />
-            <BlogContent
+            <EventContent
                 selectedCategory={selectedCategory}
                 blogs={filteredBlogs}
             />
@@ -94,4 +94,4 @@ function Blog() {
     );
 }
 
-export default Blog;
+export default Event;

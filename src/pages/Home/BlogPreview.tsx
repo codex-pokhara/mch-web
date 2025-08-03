@@ -56,7 +56,7 @@ function BlogPreview() {
                                 <p className="text-gray-600 mb-4">{blog.excerpt}</p>
                                 <Link
                                     to={`/blog/${blog.id}`}
-                                    className="text-blue-600 hover:text-blue-700 font-medium"
+                                    className="text-primary hover:brightness-90 font-medium"
                                 >
                                     Read More →
                                 </Link>
@@ -68,7 +68,7 @@ function BlogPreview() {
                 <div className="text-center">
                     <Link
                         to="/blog"
-                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                        className="inline-block bg-primary hover:brightness-90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
                     >
                         View All Stories
                     </Link>
