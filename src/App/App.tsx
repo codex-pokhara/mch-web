@@ -20,6 +20,12 @@ import Layout from '@/components/Layout';
 import AuthContext, { type AuthState } from '@/contexts/auth';
 import { baseRequest } from '@/lib/base';
 import { setLocalStorage } from '@/lib/utils';
+import About from '@/pages/AboutUs';
+import Blog from '@/pages/Blog';
+import BlogDetail from '@/pages/BlogDetail';
+import Budget from '@/pages/Budget';
+import ContactUs from '@/pages/ContactUs';
+import Gallery from '@/pages/Gallery';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 
@@ -65,6 +71,30 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home />,
+            },
+            {
+                path: '/about',
+                element: <About />,
+            },
+            {
+                path: '/gallery',
+                element: <Gallery />,
+            },
+            {
+                path: '/blog',
+                element: <Blog />,
+            },
+            {
+                path: '/blog/:id',
+                element: <BlogDetail />,
+            },
+            {
+                path: '/budget',
+                element: <Budget />,
+            },
+            {
+                path: '/contact',
+                element: <ContactUs />,
             },
         ],
     },

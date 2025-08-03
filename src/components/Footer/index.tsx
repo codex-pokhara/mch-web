@@ -27,7 +27,7 @@ export default function Footer() {
                         >
                             <img
                                 className="h-18 w-auto"
-                                src=""
+                                src="Vector.png"
                                 alt="logo"
                             />
                         </Link>
