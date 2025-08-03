@@ -44,7 +44,7 @@ function OurValues() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {values.map((value) => (
                         <div key={value.title} className="bg-white p-6 rounded-lg shadow-md text-center">
-                            <div className="text-blue-600 mb-4 flex justify-center">{value.icon}</div>
+                            <div className="text-primary mb-4 flex justify-center">{value.icon}</div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h3>
                             <p className="text-gray-600">{value.description}</p>
                         </div>

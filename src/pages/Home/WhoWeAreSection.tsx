@@ -26,11 +26,11 @@ function WhoWeAreSection() {
                         </p>
                         <div className="grid grid-cols-2 gap-4 sm:gap-6">
                             <div className="text-center">
-                                <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2">38</div>
+                                <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">38</div>
                                 <div className="text-sm sm:text-base text-gray-600">Children Served</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2">22+</div>
+                                <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">22+</div>
                                 <div className="text-sm sm:text-base text-gray-600">Years of Service</div>
                             </div>
                         </div>

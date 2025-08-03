@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 function HeroSection() {
@@ -10,7 +12,7 @@ function HeroSection() {
                     backgroundImage: "url('https://images.unsplash.com/photo-1517022812141-23620dba5c23?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')",
                 }}
             >
-                <div className="absolute inset-0 bg-blue-900 opacity-75" />
+                <div className="absolute inset-0 bg-primary opacity-75" />
                 <MaxWidthWrapper>
                     <div className="relative max-w-8xl mx-auto ">
                         <div className="max-w-3xl">
@@ -24,12 +26,13 @@ function HeroSection() {
                                 we provide hope and care to 38 orphaned and abandoned children.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <button
-                                    className="border-2 border-white text-white hover:bg-white hover:text-blue-800 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-lg transition-colors w-full sm:w-auto"
+                                <Link
+                                    to="/about"
+                                    className="border-2 border-white text-white hover:bg-white hover:text-primary px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-lg transition-colors w-full sm:w-auto"
                                     type="button"
                                 >
                                     Learn More
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>

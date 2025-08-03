@@ -82,7 +82,7 @@ function WhatWeDoSection() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     {services.map((service) => (
                         <div key={service.title} className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                            <div className="text-blue-600 mb-4">{service.icon}</div>
+                            <div className="text-primary mb-4">{service.icon}</div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-3">{service.title}</h3>
                             <p className="text-gray-600">{service.description}</p>
                         </div>
@@ -93,7 +93,7 @@ function WhatWeDoSection() {
                     <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Children We Serve</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {targetGroups.map((group) => (
-                            <div key={group.category} className="border-l-4 border-blue-500 pl-6">
+                            <div key={group.category} className="border-l-4 border-primary pl-6">
                                 <h4 className="font-semibold text-gray-900 mb-2">{group.category}</h4>
                                 <p className="text-gray-600">{group.description}</p>
                             </div>

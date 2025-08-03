@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import {
     Facebook,
     Instagram,
-    Twitter,
 } from 'lucide-react';
 
 import MaxWidthWrapper from '../MaxWidthWrapper';
@@ -34,7 +33,8 @@ export default function Footer() {
                         <p
                             className="text-sm text-muted-foreground mt-2"
                         >
-                            Combining the love of outdoor adventures with meaningful social impact.
+                            Mountain Children Home, one family Spreading love,
+                            care & hope.
                         </p>
                     </div>
                     <div>
@@ -91,14 +91,6 @@ export default function Footer() {
                         >
                             <li>
                                 <Link
-                                    to="/donate"
-                                    className="text-sm hover:text-primary"
-                                >
-                                    Donate
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
                                     to="/contact"
                                     className="text-sm hover:text-primary"
                                 >
@@ -117,7 +109,7 @@ export default function Footer() {
                             className="flex gap-4"
                         >
                             <Link
-                                to="https://www.facebook.com/profile.php?id=61576875035812&mibextid=wwXIfr&rdid=NhemmDmRb[…]www.facebook.com%2Fshare%2F15Yo3MYdi8%2F%3Fmibextid%3DwwXIfr"
+                                to="https://www.facebook.com/mountain.children.home.2025/"
                                 className="text-muted-foreground hover:text-primary"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -132,7 +124,7 @@ export default function Footer() {
                                 </span>
                             </Link>
                             <Link
-                                to="https://www.instagram.com/deegotrails"
+                                to="https://www.instagram.com/mountainchildren_home/"
                                 className="text-muted-foreground hover:text-primary"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -146,26 +138,11 @@ export default function Footer() {
                                     Instagram
                                 </span>
                             </Link>
-                            <Link
-                                to="https://x.com/DeegoTrails"
-                                className="text-muted-foreground hover:text-primary"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Twitter
-                                    className="h-5 w-5"
-                                />
-                                <span
-                                    className="sr-only"
-                                >
-                                    Twitter
-                                </span>
-                            </Link>
                         </div>
                         <p
                             className="text-sm text-muted-foreground mt-4"
                         >
-                            Email: infodeegotrails@gmail.com
+                            Email: orphanhomedadagaun@gmail.com
                         </p>
                     </div>
                 </div>
@@ -179,7 +156,7 @@ export default function Footer() {
                         {' '}
                         {new Date().getFullYear()}
                         {' '}
-                        Deego Trails. All rights reserved.
+                        Mountain Children Home. All rights reserved.
                     </p>
                 </div>
             </MaxWidthWrapper>

@@ -7,7 +7,7 @@ import HeroSection from '@/components/HeroSection';
 
 function About() {
     const title = 'About Mountain Children Home';
-    const description = ' For over 15 years, we&apos;ve been a beacon of hope, providing love, care, and opportunities to children who need it most.';
+    const description = 'For over 15 years, we\'ve been a beacon of hope, providing love, care, and opportunities to children who need it most.';
     return (
         <>
             <HeroSection title={title} description={description} />

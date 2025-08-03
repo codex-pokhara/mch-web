@@ -74,9 +74,9 @@ export default function Header() {
                     <div
                         className="hidden md:flex gap-4"
                     >
-                        <Link to="/donate">
+                        <Link to="/contact">
                             <Button>
-                                Donate now
+                                Contact Us
                             </Button>
                         </Link>
                     </div>
@@ -147,13 +147,13 @@ export default function Header() {
                                     </Link>
                                 )) }
                                 <Link
-                                    to="/donate"
+                                    to="/contact"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     <Button
                                         className="w-full bg-primary hover:bg-primary/90"
                                     >
-                                        Donate Now
+                                        Contact Us
                                     </Button>
                                 </Link>
                             </nav>
