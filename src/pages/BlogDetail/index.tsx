@@ -234,7 +234,6 @@ function BlogDetail() {
                         type="button"
                         onClick={() => {
                             const url = window.location.href;
-                            const text = `Check out this story: ${blog.title}`;
                             window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
                         }}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition-colors"
