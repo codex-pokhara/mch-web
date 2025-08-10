@@ -1,87 +1,131 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import BlogContent from './BlogContent';
 
 import HeroSection from '@/components/HeroSection';
+import { baseRequest } from '@/lib/base';
+
+export interface Tag {
+    id: number;
+    name: string;
+    slug: string;
+}
+
+export interface BlogPost {
+    id: number;
+    title: string;
+    slug: string;
+    cover_image: string;
+    content: string;
+    author_name: string;
+    tags: Tag[];
+    reading_time: number;
+    published_at: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
+
+interface BlogAPIResponse {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: BlogPost[];
+}
+
+const blogService = {
+    async getPosts(): Promise<BlogAPIResponse> {
+        const response = await baseRequest({
+            url: '/cms/blog-posts/',
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch blog posts: ${response.statusText}`);
+        }
+
+        return response.data;
+    },
+};
 
 function Blog() {
     const title = 'Our Blog';
     const description = 'Stay updated with the latest news, stories, and updates from Mountain Children Home. Read about our children&apos;s achievements, ongoing projects, and community impact.';
 
-    const blogs = [
-        {
-            id: 1,
-            title: 'A Day in the Life at Mountain Children Home',
-            excerpt: 'Follow along as we share what a typical day looks like for our children, from morning prayers to evening activities. See how structure, love, and learning come together to create a nurturing environment.',
-            content: 'Every day at Mountain Children Home begins at 6:00 AM with the gentle sound of morning prayers...',
-            date: 'March 15, 2024',
-            author: 'Sarah Johnson',
-            category: 'Daily Life',
-            image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-            readTime: '5 min read',
-        },
-        {
-            id: 2,
-            title: "Success Story: Maria's Journey to University",
-            excerpt: 'Read about Maria, who grew up at our home and is now pursuing her dreams at university thanks to your support. Her story is a testament to what love and education can achieve.',
-            content: 'Maria arrived at Mountain Children Home when she was just 8 years old...',
-            date: 'March 10, 2024',
-            author: 'Michael Chen',
-            category: 'Success Stories',
-            image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-            readTime: '7 min read',
-        },
-        {
-            id: 3,
-            title: 'Building Our New Learning Center',
-            excerpt: "We're excited to share updates on our new learning center construction, which will provide better educational facilities for our children and expand our capacity to serve more kids in need.",
-            content: 'Construction on our new learning center is progressing wonderfully...',
-            date: 'March 5, 2024',
-            author: 'Sarah Johnson',
-            category: 'Updates',
-            image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-            readTime: '4 min read',
-        },
-        {
-            id: 4,
-            title: 'Celebrating Our 15th Anniversary',
-            excerpt: 'This month marks 15 years since Mountain Children Home first opened its doors. Join us as we reflect on our journey and celebrate the hundreds of lives that have been transformed.',
-            content: 'Fifteen years ago, our founders had a simple but powerful vision...',
-            date: 'February 28, 2024',
-            author: 'Dr. Maria Rodriguez',
-            category: 'Milestones',
-            image: 'https://images.unsplash.com/photo-1527576539890-dfa815648363?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-            readTime: '6 min read',
-        },
-        {
-            id: 5,
-            title: 'Health and Wellness Initiative Launch',
-            excerpt: "We're launching a comprehensive health and wellness program to ensure every child receives the physical and mental health support they need to thrive.",
-            content: "Good health is fundamental to a child's ability to learn and grow...",
-            date: 'February 20, 2024',
-            author: 'Dr. Maria Rodriguez',
-            category: 'Health',
-            image: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-            readTime: '5 min read',
-        },
-        {
-            id: 6,
-            title: 'Community Partnership Spotlight',
-            excerpt: 'Learn about our amazing partnership with local businesses and organizations that help make our mission possible. Community support is the backbone of our work.',
-            content: 'Our work would not be possible without the incredible support of our community partners...',
-            date: 'February 15, 2024',
-            author: 'Michael Chen',
-            category: 'Community',
-            image: 'https://images.unsplash.com/photo-1439886183900-e79ec0057170?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-            readTime: '4 min read',
-        },
-    ];
-
     const [selectedCategory] = useState('All');
 
+    const {
+        data: blogResponse,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: ['blogs'],
+        queryFn: blogService.getPosts,
+    });
+
+    // Get published blogs only - with proper null checks
+    const publishedBlogs = blogResponse?.results?.filter((blog) => blog.status === 'published') || [];
+
+    // Filter blogs by category (if you implement category filtering later)
     const filteredBlogs = selectedCategory === 'All'
-        ? blogs
-        : blogs.filter((blog) => blog.category === selectedCategory);
+        ? publishedBlogs
+        : publishedBlogs.filter((blog) => blog.tags?.some(
+            (tag) => tag.name === selectedCategory,
+        ) || false);
+
+    // Handle loading state
+    if (isLoading) {
+        return (
+            <>
+                <HeroSection title={title} description={description} />
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+                            <p className="text-gray-600">Loading blog posts...</p>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    // Handle error state
+    if (isError) {
+        return (
+            <>
+                <HeroSection title={title} description={description} />
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="text-center">
+                            <p className="text-red-600 mb-4">Failed to load blog posts</p>
+                            <p className="text-gray-600">
+                                {error instanceof Error ? error.message : 'An unexpected error occurred'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    // Handle empty state
+    if (filteredBlogs.length === 0) {
+        return (
+            <>
+                <HeroSection title={title} description={description} />
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="text-center">
+                            <p className="text-gray-600">No blog posts found</p>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -93,5 +137,4 @@ function Blog() {
         </>
     );
 }
-
 export default Blog;

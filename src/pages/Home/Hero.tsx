@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import image1 from '@/assets/1.jpg';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 function HeroSection() {
@@ -9,7 +10,8 @@ function HeroSection() {
             <div
                 className="relative min-h-[500px] sm:min-h-[600px] flex items-center bg-cover bg-center"
                 style={{
-                    backgroundImage: "url('https://images.unsplash.com/photo-1517022812141-23620dba5c23?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')",
+                    backgroundImage: `url(${image1})`,
+                    backgroundPosition: 'bottom',
                 }}
             >
                 <div className="absolute inset-0 bg-primary opacity-75" />

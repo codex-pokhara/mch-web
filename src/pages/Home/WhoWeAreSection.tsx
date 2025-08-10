@@ -1,3 +1,4 @@
+import img1 from '@/assets/mountain.jpg';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 function WhoWeAreSection() {
@@ -37,7 +38,7 @@ function WhoWeAreSection() {
                     </div>
                     <div className="relative order-1 lg:order-2">
                         <img
-                            src="https://images.unsplash.com/photo-1517022812141-23620dba5c23?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            src={img1}
                             alt="Children at Mountain Children Home"
                             className="rounded-lg shadow-lg w-full h-64 sm:h-80 lg:h-96 object-cover"
                         />

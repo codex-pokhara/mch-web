@@ -135,7 +135,7 @@ function ContactSection(props:ContactSectionProps) {
 
                             <button
                                 type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
+                                className="w-full bg-primary hover:brightness-90 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
                             >
                                 Send Message
                             </button>
@@ -152,7 +152,7 @@ function ContactSection(props:ContactSectionProps) {
                                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h3>
                                 <div className="space-y-4">
                                     <div className="flex items-start">
-                                        <ContactIcon className="h-5 w-5 text-blue-600 mr-3 mt-1" />
+                                        <ContactIcon className="h-5 w-5 text-primary mr-3 mt-1" />
                                         <div>
                                             <p className="font-medium text-gray-900">Address</p>
                                             <p className="text-gray-600">
@@ -163,14 +163,14 @@ function ContactSection(props:ContactSectionProps) {
                                         </div>
                                     </div>
                                     <div className="flex items-start">
-                                        <ContactIcon className="h-5 w-5 text-blue-600 mr-3 mt-1" />
+                                        <ContactIcon className="h-5 w-5 text-primary mr-3 mt-1" />
                                         <div>
                                             <p className="font-medium text-gray-900">Phone</p>
                                             <p className="text-gray-600">(555) 123-4567</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start">
-                                        <ContactIcon className="h-5 w-5 text-blue-600 mr-3 mt-1" />
+                                        <ContactIcon className="h-5 w-5 text-primary mr-3 mt-1" />
                                         <div>
                                             <p className="font-medium text-gray-900">Email</p>
                                             <p className="text-gray-600">info@mountainchildrenhome.org</p>
