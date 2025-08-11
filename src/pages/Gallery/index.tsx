@@ -1,99 +1,71 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import GallerySection from './GallerySection';
+import GallerySection, { type Album } from './GallerySection';
 
 import HeroSection from '@/components/HeroSection';
+import { baseRequest } from '@/lib/base';
+
+interface AlbumAPIResponse {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Album[];
+}
+
+export interface Photo {
+    id: number;
+    image: string;
+    caption: string;
+    created_at: string;
+    album: number;
+  }
+
+const galleryService = {
+    async getAlbums(): Promise<AlbumAPIResponse> {
+        const response = await baseRequest({
+            url: '/cms/albums/',
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch albums: ${response.statusText}`);
+        }
+
+        return response.data;
+    },
+};
+
+const QUERY_KEYS = {
+    photos: ['photos'] as const,
+    albums: ['albums'] as const,
+} as const;
 
 function Gallery() {
     const [selectedImage, setSelectedImage] = useState<number | null>(null);
     const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
     const title = 'Our Gallery';
     const description = 'Explore the moments of joy, learning, and growth at Mountain Children Home through our photo gallery.';
-    const albums = [
-        {
-            id: 'daily-life',
-            name: 'Daily Life',
-            cover: 'https://images.unsplash.com/photo-1517022812141-23620dba5c23?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-            images: [
-                {
-                    src: 'https://images.unsplash.com/photo-1517022812141-23620dba5c23?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Children playing together',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Study time',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1439886183900-e79ec0057170?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Outdoor activities',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Learning together',
-                },
-            ],
-        },
-        {
-            id: 'education',
-            name: 'Education & Learning',
-            cover: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-            images: [
-                {
-                    src: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Classroom learning',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Computer learning',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Reading time',
-                },
-            ],
-        },
-        {
-            id: 'events',
-            name: 'Special Events',
-            cover: 'https://images.unsplash.com/photo-1527576539890-dfa815648363?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-            images: [
-                {
-                    src: 'https://images.unsplash.com/photo-1527576539890-dfa815648363?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Birthday celebration',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Holiday gathering',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1517022812141-23620dba5c23?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Graduation ceremony',
-                },
-            ],
-        },
-        {
-            id: 'facilities',
-            name: 'Our Facilities',
-            cover: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-            images: [
-                {
-                    src: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Main building',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1527576539890-dfa815648363?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Dormitory rooms',
-                },
-                {
-                    src: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    alt: 'Learning center',
-                },
-            ],
-        },
-    ];
 
-    const currentAlbum = albums.find((album) => album.id === selectedAlbum);
-    const currentImages = currentAlbum?.images || [];
+    const {
+        data: albumsResponse,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: QUERY_KEYS.albums, // Add this to your QUERY_KEYS constant
+        queryFn: galleryService.getAlbums,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
+        retry: 2,
+        refetchOnWindowFocus: false,
+    });
+
+    // Use API data directly to match GallerySection component types
+    const albums = albumsResponse?.results || [];
+
+    const currentAlbum = albums.find((album) => album.slug === selectedAlbum);
+    const currentImages = currentAlbum?.photos || [];
 
     const openImage = (index: number) => {
         setSelectedImage(index);
@@ -121,10 +93,63 @@ function Gallery() {
         if (e.key === 'Escape') closeImage();
     };
 
+    // Handle loading state
+    if (isLoading) {
+        return (
+            <>
+                <HeroSection title={title} description={description} />
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+                            <p className="text-gray-600">Loading gallery...</p>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    // Handle error state
+    if (isError) {
+        return (
+            <>
+                <HeroSection title={title} description={description} />
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="text-center">
+                            <p className="text-red-600 mb-4">Failed to load gallery</p>
+                            <p className="text-gray-600">
+                                {error instanceof Error ? error.message : 'An unexpected error occurred'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    // Handle empty state
+    if (albums.length === 0) {
+        return (
+            <>
+                <HeroSection title={title} description={description} />
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="text-center">
+                            <p className="text-gray-600">No albums found</p>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
     return (
         <>
             {/* Hero Section */}
             <HeroSection title={title} description={description} />
+
             {/* Gallery Content */}
             <GallerySection
                 selectedAlbum={selectedAlbum}

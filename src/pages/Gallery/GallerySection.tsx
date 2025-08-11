@@ -6,25 +6,30 @@ import { X } from 'lucide-react';
 
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
-// Define interfaces - make sure these match the parent component
-interface Image {
-  src: string;
-  alt: string;
-}
+export interface Photo {
+    id: number;
+    image: string;
+    caption: string;
+    created_at: string;
+    album: number;
+  }
 
-interface Album {
-  id: string; // Changed from string | number to just string to match parent
-  cover: string;
-  name: string;
-  images: Image[];
-}
+export interface Album {
+    id: number;
+    title: string;
+    slug: string;
+    description: string;
+    cover_image: string;
+    created_at: string;
+    photos: Photo[];
+  }
 
 interface GalleryProps {
-  selectedAlbum: string | null; // Changed from string | number | null to string | null
-  setSelectedAlbum: (id: string | null) => void; // Changed from string | number | null
+  selectedAlbum: string | null;
+  setSelectedAlbum: (id: string | null) => void;
   albums: Album[];
   currentAlbum: Album | undefined;
-  currentImages: Image[];
+  currentImages: Photo[];
   selectedImage: number | null;
   openImage: (index: number) => void;
   closeImage: () => void;
@@ -67,18 +72,18 @@ function GallerySection(props: GalleryProps) {
                                     <div
                                         key={album.id}
                                         className="relative group cursor-pointer"
-                                        onClick={() => setSelectedAlbum(album.id)}
+                                        onClick={() => setSelectedAlbum(album.slug)}
                                     >
                                         <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow">
                                             <img
-                                                src={album.cover}
-                                                alt={album.name}
+                                                src={album.cover_image}
+                                                alt={album.title}
                                                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
                                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                                                <h3 className="text-white font-semibold text-lg">{album.name}</h3>
+                                                <h3 className="text-white font-semibold text-lg">{album.title}</h3>
                                                 <p className="text-gray-200 text-sm">
-                                                    {album.images.length}
+                                                    {album.photos.length}
                                                     {' '}
                                                     photos
                                                 </p>
@@ -100,21 +105,21 @@ function GallerySection(props: GalleryProps) {
                                     >
                                         ← Back to Albums
                                     </button>
-                                    <h2 className="text-3xl font-bold text-gray-900">{currentAlbum?.name}</h2>
+                                    <h2 className="text-3xl font-bold text-gray-900">{currentAlbum?.title}</h2>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {currentImages.map((image, index) => (
                                     <div
-                                        key={image.src}
+                                        key={image.image}
                                         className="relative group cursor-pointer"
                                         onClick={() => openImage(index)}
                                     >
                                         <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow">
                                             <img
-                                                src={image.src}
-                                                alt={image.alt}
+                                                src={image.image}
+                                                alt={image.caption}
                                                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
                                         </div>
@@ -144,8 +149,8 @@ function GallerySection(props: GalleryProps) {
                         </button>
 
                         <img
-                            src={currentImages[selectedImage].src}
-                            alt={currentImages[selectedImage].alt}
+                            src={currentImages[selectedImage].image}
+                            alt={currentImages[selectedImage].caption}
                             className="max-w-full max-h-full object-contain"
                             onClick={(e) => e.stopPropagation()}
                         />
