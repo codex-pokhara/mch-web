@@ -2,7 +2,7 @@ FROM node:22-alpine
 
 ARG PORT
 ENV PORT=${PORT}
-
+ENV VITE_APP_SERVER_URL=https://mchapi.codex.com.np/api
 
 # Set working directory
 WORKDIR /app
@@ -25,8 +25,9 @@ COPY . .
 
 # Build the application
 RUN pnpm run build
+
 # Expose the desired port
 EXPOSE $PORT
 
 # Command to serve the build folder
-CMD ["serve", "-s", "dist", "-l", $PORT]
+CMD ["serve", "-s", "dist", "-l", "$PORT"]
