@@ -176,10 +176,6 @@ function EventDetail() {
                                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                                     {event.title}
                                 </h1>
-                                <p className="text-white/90 text-lg max-w-2xl">
-                                    Join us for this amazing event that makes a meaningful impact
-                                    on the lives of children at Mountain Children Home.
-                                </p>
                             </div>
 
                             <div className="mt-6 md:mt-0 flex flex-col sm:flex-row gap-4">
