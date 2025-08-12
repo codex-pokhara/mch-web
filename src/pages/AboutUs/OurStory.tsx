@@ -1,5 +1,5 @@
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import image1 from '@/assets/1.jpg';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 function OurStory() {
     return (
