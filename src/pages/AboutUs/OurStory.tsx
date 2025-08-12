@@ -1,4 +1,5 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import image1 from '@/assets/1.jpg';
 
 function OurStory() {
     return (
@@ -28,7 +29,7 @@ function OurStory() {
                     </div>
                     <div>
                         <img
-                            src="https://images.unsplash.com/photo-1517022812141-23620dba5c23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                            src={image1}
                             alt="Mountain Children Home building"
                             className="rounded-lg shadow-lg w-full"
                         />

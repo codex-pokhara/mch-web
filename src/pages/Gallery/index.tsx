@@ -36,11 +36,6 @@ const galleryService = {
     },
 };
 
-const QUERY_KEYS = {
-    photos: ['photos'] as const,
-    albums: ['albums'] as const,
-} as const;
-
 function Gallery() {
     const [selectedImage, setSelectedImage] = useState<number | null>(null);
     const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
@@ -53,12 +48,8 @@ function Gallery() {
         isError,
         error,
     } = useQuery({
-        queryKey: QUERY_KEYS.albums, // Add this to your QUERY_KEYS constant
+        queryKey: ['albums'], // Add this to your QUERY_KEYS constant
         queryFn: galleryService.getAlbums,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        gcTime: 10 * 60 * 1000, // 10 minutes
-        retry: 2,
-        refetchOnWindowFocus: false,
     });
 
     // Use API data directly to match GallerySection component types
