@@ -10,8 +10,8 @@ import {
 function ContributorsSection() {
     const contributors = [
         {
-            name: 'Global Care Foundation',
-            type: 'Major Sponsor',
+            name: 'Code X Pokhara ',
+            type: 'Website Sponsor',
             logo: 'https://images.unsplash.com/photo-1527576539890-dfa815648363?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80',
             description: 'Supporting our educational programs for over 5 years',
         },

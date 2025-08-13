@@ -20,7 +20,7 @@ export const navigation = [
         url: '/budget',
     },
     {
-        title: 'Event',
+        title: 'Events',
         url: '/event',
     },
 

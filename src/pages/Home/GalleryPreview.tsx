@@ -40,7 +40,7 @@ interface GalleryProps {
     maxImages?: number;
 }
 
-function GalleryPreview({ maxImages = 5 }: GalleryProps) {
+function GalleryPreview({ maxImages = 4 }: GalleryProps) {
     const { data: photosResponse, isLoading } = useQuery({
         queryKey: ['photos'],
         queryFn: galleryService.getPhotos,
