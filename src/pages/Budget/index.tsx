@@ -2,6 +2,7 @@ import AnnualOperatingSection from './AnnualOperatingSection';
 import BudgetOverview from './BudgetOverview';
 import ChildWelfareSection from './ChildWelfareSection';
 import ContactSection from './ContactSection';
+import PDFSection from './PDFSection';
 import SDGSection from './SDGSection';
 import SustainableSection from './SustainableSection';
 
@@ -95,6 +96,7 @@ function Budget() {
             />
             <SDGSection sdgAlignment={sdgAlignment} />
             <ContactSection />
+            <PDFSection />
         </div>
 
     );
