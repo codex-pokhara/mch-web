@@ -156,7 +156,7 @@ function Events() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {events.map((event) => (
-                        <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 pt-0">
                             <div className="relative">
                                 <img
                                     src={event.cover_image}
@@ -177,9 +177,11 @@ function Events() {
                                     {event.title}
                                 </h3>
 
-                                <p className="text-muted-foreground mb-4 line-clamp-3">
-                                    {event.description}
-                                </p>
+                                <div
+                                    className="text-muted-foreground mb-4 line-clamp-3"
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{ __html: event.description }}
+                                />
 
                                 <div className="space-y-2 mb-4">
                                     <div className="flex items-center text-sm text-muted-foreground">
