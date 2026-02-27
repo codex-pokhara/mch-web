@@ -36,132 +36,121 @@ export default function Header() {
             document.body.style.overflow = '';
         };
     }, [isMenuOpen]);
+
     return (
         <header
             className={cn(
-                'w-full border-b sticky top-0 transition-colors duration-300 bg-white z-40',
-                scrolled && ' backdrop-blur-3xl bg-white',
+                'w-full sticky top-0 transition-all duration-500 z-40',
+                scrolled
+                    ? 'bg-white/80 backdrop-blur-2xl shadow-md'
+                    : 'bg-background/95 backdrop-blur-sm',
             )}
         >
             <MaxWidthWrapper>
-                <div
-                    className="flex h-16 items-center justify-between"
-                >
+                <div className="flex h-20 items-center justify-between">
                     <Link
                         to="/"
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-3"
                     >
                         <img
                             src="Vector.png"
-                            alt="logo"
-                            className="h-14"
+                            alt="OHCDS logo"
+                            className="h-12"
                         />
+                        <div className="hidden sm:block">
+                            <span className="text-sm font-bold leading-tight block text-foreground">
+                                OHCDS
+                            </span>
+                            <span className="text-xs leading-tight block text-muted-foreground">
+                                Mountain Children&apos;s Home
+                            </span>
+                        </div>
                     </Link>
-                    <nav
-                        className="hidden md:flex gap-6"
-                    >
+                    <nav className="hidden lg:flex gap-8">
                         {navigation.map((item) => (
                             <Link
                                 to={item.url}
                                 key={item.title}
-                                className="text-sm font-medium hover:text-primary"
+                                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-200"
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 {item.title}
                             </Link>
-                        )) }
+                        ))}
                     </nav>
-                    <div
-                        className="hidden md:flex gap-4"
-                    >
-                        <Link to="/contact">
-                            <Button>
-                                Contact Us
+                    <div className="hidden lg:flex gap-4">
+                        <Link to="/get-involved">
+                            <Button variant="accent" className="px-7">
+                                Get Involved
                             </Button>
                         </Link>
                     </div>
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="md:hidden"
+                        className="lg:hidden"
                         onClick={() => setIsMenuOpen((prev) => !prev)}
                     >
-                        <Menu
-                            className="h-6 w-6"
-                        />
-                        <span
-                            className="sr-only"
-                        >
-                            Toggle menu
-                        </span>
+                        <Menu className="h-6 w-6" />
+                        <span className="sr-only">Toggle menu</span>
                     </Button>
                 </div>
             </MaxWidthWrapper>
-            {
-                isMenuOpen && (
-                    <div
-                        className="fixed inset-0 z-50 !bg-white md:hidden overflow-y-auto h-[100vh]"
-                    >
-                        <MaxWidthWrapper>
-                            <div
-                                className="flex h-16 items-center justify-between"
+            {isMenuOpen && (
+                <div className="fixed inset-0 z-50 bg-background lg:hidden overflow-y-auto h-screen">
+                    <MaxWidthWrapper>
+                        <div className="flex h-20 items-center justify-between">
+                            <Link
+                                to="/"
+                                className="flex items-center gap-3"
+                                onClick={() => setIsMenuOpen(false)}
                             >
+                                <img
+                                    src="Vector.png"
+                                    className="h-12 w-auto"
+                                    alt="OHCDS logo"
+                                />
+                                <span className="text-sm font-bold text-foreground">
+                                    OHCDS
+                                </span>
+                            </Link>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                <X className="h-6 w-6" />
+                                <span className="sr-only">Close menu</span>
+                            </Button>
+                        </div>
+                    </MaxWidthWrapper>
+                    <MaxWidthWrapper>
+                        <nav className="grid gap-6 py-6">
+                            {navigation.map((item) => (
                                 <Link
-                                    to="/"
-                                    className="flex items-center gap-2"
+                                    to={item.url}
+                                    key={item.title}
+                                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors duration-200"
+                                    onClick={() => setIsMenuOpen(false)}
                                 >
-                                    <img
-                                        src=""
-                                        className="h-14 w-auto"
-                                        alt="logo"
-                                    />
+                                    {item.title}
                                 </Link>
+                            ))}
+                            <Link
+                                to="/get-involved"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
                                 <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setIsMenuOpen(false)}
+                                    variant="accent"
+                                    className="w-full"
                                 >
-                                    <X
-                                        className="h-6 w-6"
-                                    />
-                                    <span
-                                        className="sr-only"
-                                    >
-                                        Close menu
-                                    </span>
+                                    Get Involved
                                 </Button>
-                            </div>
-                        </MaxWidthWrapper>
-                        <MaxWidthWrapper>
-                            <nav
-                                className="grid gap-6 py-6"
-                            >
-                                {navigation.map((item) => (
-                                    <Link
-                                        to={item.url}
-                                        key={item.title}
-                                        className="text-sm font-medium hover:text-primary"
-                                        onClick={() => setIsMenuOpen(false)}
-                                    >
-                                        {item.title}
-                                    </Link>
-                                )) }
-                                <Link
-                                    to="/contact"
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    <Button
-                                        className="w-full bg-primary hover:bg-primary/90"
-                                    >
-                                        Contact Us
-                                    </Button>
-                                </Link>
-                            </nav>
-                        </MaxWidthWrapper>
-
-                    </div>
-                )
-            }
+                            </Link>
+                        </nav>
+                    </MaxWidthWrapper>
+                </div>
+            )}
         </header>
     );
 }

@@ -20,16 +20,17 @@ import Layout from '@/components/Layout';
 import AuthContext, { type AuthState } from '@/contexts/auth';
 import { baseRequest } from '@/lib/base';
 import { setLocalStorage } from '@/lib/utils';
-import About from '@/pages/AboutUs';
 import Blog from '@/pages/Blog';
 import BlogDetail from '@/pages/BlogDetail';
-import Budget from '@/pages/Budget';
-import ContactUs from '@/pages/ContactUs';
 import Event from '@/pages/Event';
 import EventDetail from '@/pages/EventDetail';
 import Gallery from '@/pages/Gallery';
+import GetInvolved from '@/pages/GetInvolved';
 import Home from '@/pages/Home';
+import Impact from '@/pages/Impact';
 import Login from '@/pages/Login';
+import OurFamily from '@/pages/OurFamily';
+import Transparency from '@/pages/Transparency';
 
 const getProfile = async () => {
     const response = await baseRequest({
@@ -75,12 +76,24 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: '/about',
-                element: <About />,
+                path: '/our-family',
+                element: <OurFamily />,
+            },
+            {
+                path: '/impact',
+                element: <Impact />,
+            },
+            {
+                path: '/transparency',
+                element: <Transparency />,
             },
             {
                 path: '/gallery',
                 element: <Gallery />,
+            },
+            {
+                path: '/get-involved',
+                element: <GetInvolved />,
             },
             {
                 path: '/blog',
@@ -91,14 +104,6 @@ const router = createBrowserRouter([
                 element: <BlogDetail />,
             },
             {
-                path: '/budget',
-                element: <Budget />,
-            },
-            {
-                path: '/contact',
-                element: <ContactUs />,
-            },
-            {
                 path: '/event',
                 element: <Event />,
             },
@@ -106,7 +111,19 @@ const router = createBrowserRouter([
                 path: '/event/:id',
                 element: <EventDetail />,
             },
-
+            // Legacy redirects
+            {
+                path: '/about',
+                element: <OurFamily />,
+            },
+            {
+                path: '/budget',
+                element: <Transparency />,
+            },
+            {
+                path: '/contact',
+                element: <GetInvolved />,
+            },
         ],
     },
 ]);

@@ -54,10 +54,10 @@ function BlogContent(props: BlogContentProps) {
 
     if (!blogs || blogs.length === 0) {
         return (
-            <section className="py-16 bg-white">
+            <section className="py-16 bg-background">
                 <MaxWidthWrapper>
                     <div className="text-center">
-                        <p className="text-gray-600">No blog posts available.</p>
+                        <p className="text-muted-foreground">No blog posts available.</p>
                     </div>
                 </MaxWidthWrapper>
             </section>
@@ -65,11 +65,11 @@ function BlogContent(props: BlogContentProps) {
     }
 
     return (
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-background">
             <MaxWidthWrapper>
                 {/* Featured Post */}
                 <div className="mb-16">
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div className="bg-card rounded-2xl shadow-lg overflow-hidden">
                         <div className="md:flex">
                             <div className="md:w-1/2">
                                 <img
@@ -79,7 +79,7 @@ function BlogContent(props: BlogContentProps) {
                                 />
                             </div>
                             <div className="md:w-1/2 p-8">
-                                <div className="flex items-center flex-wrap text-sm text-gray-500 mb-4">
+                                <div className="flex items-center flex-wrap text-sm text-muted-foreground mb-4">
                                     <div className="flex flex-wrap gap-2 mr-4 mb-2">
                                         {blogs[0].tags.map((tag) => (
                                             <span
@@ -95,19 +95,19 @@ function BlogContent(props: BlogContentProps) {
                                         {formatDate(blogs[0].published_at)}
                                     </div>
                                 </div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                                     {blogs[0].title}
                                 </h2>
-                                <p className="text-gray-600 mb-6 text-lg">
+                                <p className="text-muted-foreground mb-6 text-lg">
                                     {createExcerpt(blogs[0].content, 200)}
                                 </p>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center">
-                                        <Users className="h-4 w-4 mr-2 text-gray-400" />
-                                        <span className="text-gray-600">{blogs[0].author_name}</span>
+                                        <Users className="h-4 w-4 mr-2 text-muted-foreground/70" />
+                                        <span className="text-muted-foreground">{blogs[0].author_name}</span>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <span className="text-sm text-gray-500">
+                                        <span className="text-sm text-muted-foreground">
                                             {blogs[0].reading_time}
                                             {' '}
                                             min read
@@ -128,14 +128,14 @@ function BlogContent(props: BlogContentProps) {
                 {/* Blog Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {blogs.slice(selectedCategory === 'All' ? 1 : 0).map((blog) => (
-                        <article key={blog.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <article key={blog.id} className="bg-card rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
                             <img
                                 src={blog.cover_image}
                                 alt={blog.title}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-6">
-                                <div className="flex items-center flex-wrap text-sm text-gray-500 mb-3">
+                                <div className="flex items-center flex-wrap text-sm text-muted-foreground mb-3">
                                     <div className="flex flex-wrap gap-1 mr-3 mb-1">
                                         {blog.tags.slice(0, 2).map((tag) => (
                                             <span
@@ -146,7 +146,7 @@ function BlogContent(props: BlogContentProps) {
                                             </span>
                                         ))}
                                         {blog.tags.length > 2 && (
-                                            <span className="text-xs text-gray-400">
+                                            <span className="text-xs text-muted-foreground/70">
                                                 +
                                                 {blog.tags.length - 2}
                                             </span>
@@ -157,19 +157,19 @@ function BlogContent(props: BlogContentProps) {
                                         {formatDate(blog.published_at)}
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+                                <h3 className="text-xl font-semibold text-foreground mb-3 line-clamp-2">
                                     {blog.title}
                                 </h3>
-                                <p className="text-gray-600 mb-4 line-clamp-3">
+                                <p className="text-muted-foreground mb-4 line-clamp-3">
                                     {createExcerpt(blog.content)}
                                 </p>
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center text-sm text-gray-500">
+                                    <div className="flex items-center text-sm text-muted-foreground">
                                         <Users className="h-3 w-3 mr-1" />
                                         {blog.author_name}
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <span className="text-xs text-gray-500">
+                                        <span className="text-xs text-muted-foreground">
                                             {blog.reading_time}
                                             {' '}
                                             min read

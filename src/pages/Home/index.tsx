@@ -1,21 +1,21 @@
 import BlogPreview from './BlogPreview';
-import ContributorsSection from './ContributorsSection';
+import TrustSignalsSection from './ContributorsSection';
 import GalleryPreview from './GalleryPreview';
 import HeroSection from './Hero';
-import HowToHelpSection from './HowToHelpSection';
-import WhatWeDoSection from './WhatWeDoSection';
-import WhoWeAreSection from './WhoWeAreSection';
+import WhereMoneyGoesSection from './HowToHelpSection';
+import OurApproachSection from './WhatWeDoSection';
+import FounderStorySection from './WhoWeAreSection';
 
 function Home() {
     return (
         <>
             <HeroSection />
-            <WhoWeAreSection />
-            <WhatWeDoSection />
-            <HowToHelpSection />
+            <FounderStorySection />
+            <OurApproachSection />
+            <WhereMoneyGoesSection />
             <GalleryPreview />
             <BlogPreview />
-            <ContributorsSection />
+            <TrustSignalsSection />
         </>
     );
 }

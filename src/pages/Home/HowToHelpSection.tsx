@@ -1,116 +1,86 @@
 import { Link } from 'react-router-dom';
-import {
-    Building,
-    Heart,
-    Lightbulb,
-} from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
-function HowToHelpSection() {
-    const urgentNeeds = [
-        {
-            icon: <Building className="h-12 w-12" />,
-            title: 'Land Purchase',
-            description: 'Secure permanent location (11,000 sq. ft.) to avoid eviction from disputed government land',
-            priority: 'Critical',
-        },
-        {
-            icon: <Building className="h-12 w-12" />,
-            title: 'Infrastructure Upgrades',
-            description: 'Earthquake-resistant buildings, solar energy, waste management systems',
-            priority: 'High',
-        },
-        {
-            icon: <Heart className="h-12 w-12" />,
-            title: 'Healthcare Support',
-            description: 'Vaccinations, insurance, doctor visits, and mental health services',
-            priority: 'High',
-        },
-        {
-            icon: <Lightbulb className="h-12 w-12" />,
-            title: 'Educational Resources',
-            description: 'School fees, stationery, e-library, and digital learning tools',
-            priority: 'Ongoing',
-        },
-    ];
-
-    const sponsorBenefits = [
-        'Regular updates with photos and progress reports',
-        'Personal letters from children',
-        'Recognition in our materials and events',
-        'Opportunity to visit facilities and meet children',
-        'Tax deductions (eligible in some countries)',
+function WhereMoneyGoesSection() {
+    const budgetItems = [
+        { label: 'Food & Nutrition', percentage: 40, color: 'bg-accent' },
+        { label: 'Education', percentage: 15, color: 'bg-primary' },
+        { label: 'Clothing & Daily Needs', percentage: 15, color: 'bg-chart-3' },
+        { label: 'Facilities & Utilities', percentage: 12, color: 'bg-chart-5' },
+        { label: 'Healthcare', percentage: 10, color: 'bg-chart-4' },
+        { label: 'Staff & Operations', percentage: 8, color: 'bg-muted-foreground/50' },
     ];
 
     return (
-        <section className="py-16 bg-white">
+        <section className="py-24 md:py-32 bg-background">
             <MaxWidthWrapper>
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How Can You Help?</h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        With an annual budget of NPR 20,118,580 (~USD 155,450),
-                        we rely entirely on donations
-                        to provide care for 38 vulnerable children.
-                        Your support can make a lasting difference.
-                    </p>
-                </div>
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-16">
+                        <p className="text-xs font-semibold text-accent uppercase tracking-[0.2em] mb-4">
+                            Full Transparency
+                        </p>
+                        <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 tracking-tight">
+                            Where Your Money Goes
+                        </h2>
+                        <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                            Every dollar is accounted for. Here&apos;s exactly
+                            how we spend your donations.
+                        </p>
+                    </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                    {urgentNeeds.map((need) => (
-                        <div key={need.title} className="bg-blue-50 p-8 rounded-lg hover:bg-blue-100 transition-colors">
-                            <div className="flex items-center mb-4">
-                                <div className="text-primary mr-4">{need.icon}</div>
-                                <div>
-                                    <h3 className="text-xl font-semibold text-gray-900">{need.title}</h3>
-                                    <span className={`text-sm px-2 py-1 rounded ${need.priority === 'Critical' && 'bg-red-100 text-red-800'}
-                                    ${need.priority !== 'Critical' && need.priority === 'High' && 'bg-orange-100 text-orange-800'}
-                                    ${need.priority !== 'Critical' && need.priority !== 'High' && 'bg-blue-100 text-blue-800'}
-                                    `}
-                                    >
-                                        {need.priority}
+                    <div className="space-y-5 mb-12">
+                        {budgetItems.map((item) => (
+                            <div key={item.label}>
+                                <div className="flex justify-between items-center mb-2">
+                                    <span className="text-sm font-medium text-foreground/80">{item.label}</span>
+                                    <span className="text-sm font-bold text-foreground">
+                                        {item.percentage}
+                                        %
                                     </span>
                                 </div>
-                            </div>
-                            <p className="text-gray-600">{need.description}</p>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="bg-gray-50 rounded-lg p-8 mb-12">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Sponsor Benefits</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {sponsorBenefits.map((benefit) => (
-                            <div key={benefit} className="flex items-start">
-                                <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
-                                <p className="text-gray-700">{benefit}</p>
+                                <div className="w-full bg-muted rounded-full h-3">
+                                    <div
+                                        className={`${item.color} h-3 rounded-full animate-grow-width`}
+                                        style={{ width: `${item.percentage}%` }}
+                                    />
+                                </div>
                             </div>
                         ))}
                     </div>
-                </div>
 
-                <div className="bg-primary rounded-lg p-8 text-white text-center">
-                    <h3 className="text-2xl font-bold mb-4">Join Our Mission</h3>
-                    <p className="text-lg mb-6">
-                        Help us build a sustainable,
-                        compliant orphanage and create a replicable model
-                        for climate-resilient childcare in Nepal.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+                        <div className="bg-muted rounded-2xl p-6 text-center hover:shadow-sm transition-shadow">
+                            <div className="text-3xl font-bold text-primary mb-1">$197</div>
+                            <div className="text-sm text-muted-foreground">Cost per child / month</div>
+                        </div>
+                        <div className="bg-muted rounded-2xl p-6 text-center hover:shadow-sm transition-shadow">
+                            <div className="text-3xl font-bold text-primary mb-1">$65K</div>
+                            <div className="text-sm text-muted-foreground">Annual operating budget</div>
+                        </div>
+                        <div className="bg-muted rounded-2xl p-6 text-center hover:shadow-sm transition-shadow">
+                            <div className="text-3xl font-bold text-primary mb-1">40</div>
+                            <div className="text-sm text-muted-foreground">Children supported</div>
+                        </div>
+                    </div>
+
+                    <div className="text-center">
                         <Link
-                            to="/contact"
-                            className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-lg font-semibold transition-colors"
-                            type="button"
+                            to="/get-involved"
+                            className="inline-flex items-center gap-2 bg-accent text-white hover:bg-accent/85 px-8 py-4 rounded-full font-semibold text-base transition-all duration-200 shadow-sm hover:shadow-md"
                         >
-                            Support Our Mission
+                            <Heart className="h-4 w-4" />
+                            Donate Now
                         </Link>
-                        <Link
-                            to="/budget"
-                            className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-lg font-semibold transition-colors"
-                            type="button"
-                        >
-                            View Detailed Budget
-                        </Link>
+                        <div className="mt-4">
+                            <Link
+                                to="/transparency"
+                                className="text-sm text-primary hover:underline font-medium"
+                            >
+                                View detailed budget breakdown
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </MaxWidthWrapper>
@@ -118,4 +88,4 @@ function HowToHelpSection() {
     );
 }
 
-export default HowToHelpSection;
+export default WhereMoneyGoesSection;

@@ -4,24 +4,19 @@ export const navigation = [
         url: '/',
     },
     {
-        title: 'About Us',
-        url: '/about',
+        title: 'Our Family',
+        url: '/our-family',
+    },
+    {
+        title: 'Impact',
+        url: '/impact',
+    },
+    {
+        title: 'Transparency',
+        url: '/transparency',
     },
     {
         title: 'Gallery',
         url: '/gallery',
     },
-    {
-        title: 'Blog',
-        url: '/blog',
-    },
-    {
-        title: 'Budget Details',
-        url: '/budget',
-    },
-    {
-        title: 'Events',
-        url: '/event',
-    },
-
 ];

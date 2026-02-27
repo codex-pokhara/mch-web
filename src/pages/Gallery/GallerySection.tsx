@@ -55,14 +55,14 @@ function GallerySection(props: GalleryProps) {
 
     return (
         <>
-            <section className="py-16 bg-white">
+            <section className="py-16 bg-background">
                 <MaxWidthWrapper>
                     {!selectedAlbum ? (
                         // Album Grid
                         <>
                             <div className="text-center mb-12">
-                                <h2 className="text-3xl font-bold text-gray-900 mb-4">Photo Albums</h2>
-                                <p className="text-lg text-gray-600">
+                                <h2 className="text-3xl font-bold text-foreground mb-4">Photo Albums</h2>
+                                <p className="text-lg text-muted-foreground">
                                     Browse through our collection of memories organized by category.
                                 </p>
                             </div>
@@ -74,7 +74,7 @@ function GallerySection(props: GalleryProps) {
                                         className="relative group cursor-pointer"
                                         onClick={() => setSelectedAlbum(album.slug)}
                                     >
-                                        <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                                        <div className="relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
                                             <img
                                                 src={album.cover_image}
                                                 alt={album.title}
@@ -105,7 +105,7 @@ function GallerySection(props: GalleryProps) {
                                     >
                                         ← Back to Albums
                                     </button>
-                                    <h2 className="text-3xl font-bold text-gray-900">{currentAlbum?.title}</h2>
+                                    <h2 className="text-3xl font-bold text-foreground">{currentAlbum?.title}</h2>
                                 </div>
                             </div>
 
@@ -116,7 +116,7 @@ function GallerySection(props: GalleryProps) {
                                         className="relative group cursor-pointer"
                                         onClick={() => openImage(index)}
                                     >
-                                        <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                                        <div className="relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
                                             <img
                                                 src={image.image}
                                                 alt={image.caption}
@@ -134,7 +134,7 @@ function GallerySection(props: GalleryProps) {
             {/* Image Modal */}
             {selectedImage !== null && currentImages[selectedImage] && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+                    className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                     onClick={closeImage}
                     onKeyDown={handleKeyDown}
                     // tabIndex={0} // Added for keyboard accessibility
@@ -143,7 +143,7 @@ function GallerySection(props: GalleryProps) {
                         <button
                             type="button"
                             onClick={closeImage}
-                            className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-70 transition-colors z-10"
+                            className="absolute top-4 right-4 text-white rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 p-2 transition-colors z-10"
                         >
                             <X size={24} />
                         </button>
@@ -163,7 +163,7 @@ function GallerySection(props: GalleryProps) {
                                     e.stopPropagation();
                                     prevImage();
                                 }}
-                                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-70 transition-colors"
+                                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 p-2 transition-colors"
                             >
                                 ←
                             </button>
@@ -176,14 +176,14 @@ function GallerySection(props: GalleryProps) {
                                     e.stopPropagation();
                                     nextImage();
                                 }}
-                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-70 transition-colors"
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 p-2 transition-colors"
                             >
                                 →
                             </button>
                         )}
 
                         {/* Image Counter */}
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded">
+                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-white/10 backdrop-blur-sm px-3 py-1 rounded">
                             {selectedImage + 1}
                             {' '}
                             /

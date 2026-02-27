@@ -109,7 +109,7 @@ function BlogDetail() {
             <MaxWidthWrapper>
                 <div className="max-w-4xl mx-auto px-4 py-16 text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
-                    <p className="text-gray-600">Loading blog post...</p>
+                    <p className="text-muted-foreground">Loading blog post...</p>
                 </div>
             </MaxWidthWrapper>
         );
@@ -120,7 +120,7 @@ function BlogDetail() {
         return (
             <MaxWidthWrapper>
                 <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                    <h1 className="text-2xl font-bold text-foreground mb-4">
                         {blogError?.message || blogsError?.message || 'Something went wrong'}
                     </h1>
                     <Link to="/blog" className="text-blue-600 hover:text-blue-700">
@@ -136,7 +136,7 @@ function BlogDetail() {
         return (
             <MaxWidthWrapper>
                 <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-4">Blog post not found</h1>
+                    <h1 className="text-2xl font-bold text-foreground mb-4">Blog post not found</h1>
                     <Link to="/blog" className="text-blue-600 hover:text-blue-700">
                         ← Back to Blog
                     </Link>
@@ -165,7 +165,7 @@ function BlogDetail() {
 
                 {/* Article Header */}
                 <header className="mb-8">
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                    <div className="flex items-center text-sm text-muted-foreground mb-4">
                         {primaryTag && (
                             <span className="bg-primary text-white px-3 py-1 rounded-full mr-4">
                                 {primaryTag.name}
@@ -180,14 +180,14 @@ function BlogDetail() {
                         min read
                     </div>
 
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
                         {blog.title}
                     </h1>
 
                     <div className="flex items-center mb-8">
                         <div className="flex items-center">
-                            <Users className="h-5 w-5 mr-2 text-gray-400" />
-                            <span className="text-gray-600 font-medium">
+                            <Users className="h-5 w-5 mr-2 text-muted-foreground/70" />
+                            <span className="text-muted-foreground font-medium">
                                 By
                                 {' '}
                                 {blog.author_name}
@@ -198,7 +198,7 @@ function BlogDetail() {
                     <img
                         src={blog.cover_image}
                         alt={blog.title}
-                        className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
+                        className="w-full h-64 md:h-96 object-cover rounded-2xl shadow-lg"
                     />
                 </header>
 
@@ -206,19 +206,19 @@ function BlogDetail() {
                 <div className="prose prose-lg max-w-none mb-12">
                     <div
                         dangerouslySetInnerHTML={{ __html: blog.content }}
-                        className="text-gray-700 leading-relaxed space-y-6"
+                        className="text-foreground/80 leading-relaxed space-y-6"
                     />
                 </div>
 
                 {/* Tags */}
                 {blog.tags && blog.tags.length > 0 && (
                     <div className="mb-8">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags</h3>
+                        <h3 className="text-lg font-semibold text-foreground mb-4">Tags</h3>
                         <div className="flex flex-wrap gap-2">
                             {blog.tags.map((tag) => (
                                 <span
                                     key={tag.id}
-                                    className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition-colors"
+                                    className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium hover:bg-primary/20 transition-colors"
                                 >
                                     {tag.name}
                                 </span>
@@ -228,8 +228,8 @@ function BlogDetail() {
                 )}
 
                 {/* Social Sharing */}
-                <div className="border-t border-gray-200 pt-8 mb-12">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Share this story</h3>
+                <div className="border-t border-border pt-8 mb-12">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Share this story</h3>
                     <div className="flex space-x-4">
                         <button
                             type="button"
@@ -258,7 +258,7 @@ function BlogDetail() {
                                 navigator.clipboard.writeText(window.location.href);
                             // You might want to show a toast notification here
                             }}
-                            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded font-medium transition-colors"
+                            className="bg-muted-foreground hover:bg-muted-foreground/90 text-white px-4 py-2 rounded font-medium transition-colors"
                         >
                             Copy Link
                         </button>
@@ -267,30 +267,32 @@ function BlogDetail() {
 
                 {/* Related Articles */}
                 {relatedBlogs.length > 0 && (
-                    <section className="border-t border-gray-200 pt-12">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-8">Related Stories</h3>
+                    <section className="border-t border-border pt-12">
+                        <h3 className="text-2xl font-bold text-foreground mb-8">Related Stories</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {relatedBlogs.map((relatedBlog) => (
                                 <Link
                                     key={relatedBlog.id}
                                     to={`/blog/${relatedBlog.id}`}
-                                    className="group"
+                                    className="group h-full"
                                 >
-                                    <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                                        <img
-                                            src={relatedBlog.cover_image}
-                                            alt={relatedBlog.title}
-                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                                        />
-                                        <div className="p-4">
-                                            <div className="flex items-center text-xs text-gray-500 mb-2">
+                                    <article className="bg-card rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
+                                        <div className="overflow-hidden">
+                                            <img
+                                                src={relatedBlog.cover_image}
+                                                alt={relatedBlog.title}
+                                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                        </div>
+                                        <div className="p-4 flex flex-col flex-1">
+                                            <div className="flex items-center text-xs text-muted-foreground mb-2">
                                                 <Calendar className="h-3 w-3 mr-1" />
                                                 {formatDate(relatedBlog.published_at)}
                                             </div>
-                                            <h4 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                                            <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
                                                 {relatedBlog.title}
                                             </h4>
-                                            <p className="text-gray-600 text-sm line-clamp-2">
+                                            <p className="text-muted-foreground text-sm line-clamp-2 mt-auto">
                                                 {relatedBlog.content.replace(/<[^>]*>/g, '').substring(0, 100)}
                                                 ...
                                             </p>

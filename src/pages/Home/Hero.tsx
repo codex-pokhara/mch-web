@@ -1,45 +1,93 @@
 import { Link } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 
 import image1 from '@/assets/1.jpg';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
+function ImpactCounter() {
+    const stats = [
+        { value: '23', label: 'Years' },
+        { value: '200+', label: 'Children Served' },
+        { value: '40', label: 'Currently in Care' },
+        { value: '100%', label: 'Graduation Rate' },
+    ];
+
+    return (
+        <div className="bg-black/20 backdrop-blur-md">
+            <MaxWidthWrapper>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-8">
+                    {stats.map((stat) => (
+                        <div key={stat.label} className="text-center">
+                            <div className="text-4xl md:text-5xl font-extrabold text-white mb-1">
+                                {stat.value}
+                            </div>
+                            <div className="text-sm text-white/70 font-medium uppercase tracking-wide">
+                                {stat.label}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </MaxWidthWrapper>
+        </div>
+    );
+}
+
 function HeroSection() {
     return (
-        <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-            <div className="absolute inset-0 bg-black opacity-40" />
+        <section className="relative">
             <div
-                className="relative min-h-[500px] sm:min-h-[600px] flex items-center bg-cover bg-center"
+                className="relative min-h-[85vh] flex flex-col"
                 style={{
                     backgroundImage: `url(${image1})`,
-                    backgroundPosition: 'bottom',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                 }}
             >
-                <div className="absolute inset-0 bg-primary opacity-75" />
-                <MaxWidthWrapper>
-                    <div className="relative max-w-8xl mx-auto ">
-                        <div className="max-w-3xl">
-                            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                                Mountain Children Home - Nature&apos;s Nest
+                <div className="absolute inset-0 bg-linear-to-b from-black/60 via-primary/50 to-primary/80" />
+                <div className="absolute inset-0 bg-linear-to-r from-black/30 via-transparent to-transparent" />
+
+                <div className="relative flex-1 flex items-center">
+                    <MaxWidthWrapper>
+                        <div className="max-w-3xl py-16">
+                            <p className="text-accent text-xs font-semibold uppercase tracking-[0.25em] mb-6">
+                                OHCDS Mountain Children&apos;s Home
+                            </p>
+                            <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mb-8 leading-[1.05] tracking-tight">
+                                Building Futures,
+                                <br />
+                                One Child at a Time
                             </h1>
-                            <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-blue-100 leading-relaxed">
-                                Building a Sustainable Future for Vulnerable
-                                and Helpless Children in Nepal.
-                                Located in Budhanilkantha, Dadagoun, Kathmandu,
-                                we provide hope and care to 38 orphaned and abandoned children.
+                            <p className="text-lg sm:text-xl text-white/85 mb-4 leading-relaxed max-w-2xl
+                                font-light italic"
+                            >
+                                &ldquo;I know what it means to be hungry.
+                                I know what it means to have no one.
+                                That is why every child who comes
+                                to me... they become mine.&rdquo;
+                            </p>
+                            <p className="text-sm text-white/60 mb-10">
+                                &mdash; Ramesh Dev Sunar, Founder
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link
-                                    to="/about"
-                                    className="border-2 border-white text-white hover:bg-white hover:text-primary px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-lg transition-colors w-full sm:w-auto"
-                                    type="button"
+                                    to="/our-family"
+                                    className="border-2 border-white/50 text-white hover:bg-white hover:text-primary px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 text-center"
                                 >
-                                    Learn More
+                                    Meet Our Family
+                                </Link>
+                                <Link
+                                    to="/get-involved"
+                                    className="bg-accent text-white hover:bg-accent/85 px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                                >
+                                    <Heart className="h-4 w-4" />
+                                    Donate Now
                                 </Link>
                             </div>
                         </div>
-                    </div>
-                </MaxWidthWrapper>
+                    </MaxWidthWrapper>
+                </div>
 
+                <ImpactCounter />
             </div>
         </section>
     );

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import { Button } from '@/components/ui/button';
 import { baseRequest } from '@/lib/base';
 
 interface Photo {
@@ -20,7 +21,6 @@ interface PhotoResponse {
     results: Photo[];
 }
 
-// Move service outside component to prevent recreation on each render
 const galleryService = {
     async getPhotos(): Promise<PhotoResponse> {
         const response = await baseRequest({
@@ -46,28 +46,29 @@ function GalleryPreview({ maxImages = 4 }: GalleryProps) {
         queryFn: galleryService.getPhotos,
     });
 
-    // Memoize the display photos to prevent unnecessary recalculations
     const displayPhotos = useMemo(() => {
         const photos = photosResponse?.results || [];
         return photos.slice(0, maxImages);
     }, [photosResponse?.results, maxImages]);
 
-    // Memoize loading skeleton to prevent recreation
     const loadingSkeleton = useMemo(() => (
-        <section className="py-16 bg-gray-50">
+        <section className="py-24 md:py-32 bg-muted">
             <MaxWidthWrapper>
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Gallery</h2>
-                    <p className="text-lg text-gray-600">
+                <div className="text-center mb-16">
+                    <p className="text-xs font-semibold text-accent uppercase tracking-[0.2em] mb-4">
+                        Life at OHCDS
+                    </p>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 tracking-tight">Our Gallery</h2>
+                    <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
                         Take a glimpse into the daily lives of our children and see the joy,
                         learning, and growth happening at Mountain Children Home.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                     {Array.from({ length: maxImages }, (_, index) => (
-                        <div key={index} className="relative overflow-hidden rounded-lg shadow-md">
-                            <div className="w-full h-64 bg-gray-300 animate-pulse" />
+                        <div key={index} className="relative overflow-hidden rounded-2xl">
+                            <div className="w-full h-64 bg-border animate-pulse" />
                         </div>
                     ))}
                 </div>
@@ -80,26 +81,29 @@ function GalleryPreview({ maxImages = 4 }: GalleryProps) {
     }
 
     return (
-        <section className="py-16 bg-gray-50">
+        <section className="py-24 md:py-32 bg-muted">
             <MaxWidthWrapper>
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Gallery</h2>
-                    <p className="text-lg text-gray-600">
+                <div className="text-center mb-16">
+                    <p className="text-xs font-semibold text-accent uppercase tracking-[0.2em] mb-4">
+                        Life at OHCDS
+                    </p>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 tracking-tight">Our Gallery</h2>
+                    <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
                         Take a glimpse into the daily lives of our children and see the joy,
                         learning, and growth happening at Mountain Children Home.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                     {displayPhotos.map((photo) => (
                         <div
                             key={photo.id}
-                            className="relative group overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                            className="relative group overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300"
                         >
                             <img
                                 src={photo.image}
                                 alt={photo.caption || `Gallery image ${photo.id}`}
-                                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                                 loading="lazy"
                                 onError={(e) => {
                                     const target = e.target as HTMLImageElement;
@@ -107,7 +111,7 @@ function GalleryPreview({ maxImages = 4 }: GalleryProps) {
                                 }}
                             />
                             {photo.caption && (
-                                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm">
+                                <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 via-black/20 to-transparent text-white p-4 text-sm">
                                     {photo.caption}
                                 </div>
                             )}
@@ -116,11 +120,10 @@ function GalleryPreview({ maxImages = 4 }: GalleryProps) {
                 </div>
 
                 <div className="text-center">
-                    <Link
-                        to="/gallery"
-                        className="inline-block bg-primary hover:brightness-90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-                    >
-                        View Full Gallery
+                    <Link to="/gallery">
+                        <Button size="lg">
+                            View Full Gallery
+                        </Button>
                     </Link>
                 </div>
             </MaxWidthWrapper>
