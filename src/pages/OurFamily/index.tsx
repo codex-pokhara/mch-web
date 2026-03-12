@@ -4,8 +4,6 @@ import {
     Users,
 } from 'lucide-react';
 
-import image1 from '@/assets/1.jpg';
-import img2 from '@/assets/mountain.jpg';
 import HeroSection from '@/components/HeroSection';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
@@ -21,16 +19,24 @@ function OurFamily() {
             <section className="py-24 md:py-32 bg-background">
                 <MaxWidthWrapper>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                        <div>
-                            <div className="relative">
+                        <div className="portrait-card cursor-pointer">
+                            {/* Decorative dots - top left */}
+                            <div className="portrait-dots -top-6 -left-6 portrait-float" />
+                            {/* Decorative corner accent - top left */}
+                            <div className="portrait-corner -top-4 -left-4 rounded-tl-2xl border-b-0 border-r-0" />
+                            <div className="relative overflow-hidden rounded-3xl">
                                 <img
-                                    src={image1}
+                                    src="/dad.jpg"
                                     alt="Ramesh Dev Sunar with children"
-                                    className="rounded-3xl shadow-xl w-full h-80 lg:h-[450px] object-cover"
+                                    className="portrait-img rounded-3xl w-full h-80 lg:h-[450px] object-cover"
                                 />
-                                <div className="absolute -bottom-3 -right-3 bg-primary text-primary-foreground px-5 py-2 rounded-xl font-semibold text-sm shadow-lg">
-                                    Founder &amp; Chairman
-                                </div>
+                                <div className="portrait-overlay" />
+                            </div>
+                            {/* Decorative dots - bottom right */}
+                            <div className="portrait-dots -bottom-6 -right-6 portrait-float" style={{ animationDelay: '1s' }} />
+                            <div className="portrait-badge absolute -bottom-3 -right-3 bg-primary text-primary-foreground px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg flex items-center gap-2">
+                                <Heart className="h-3.5 w-3.5" />
+                                Founder &amp; Chairman
                             </div>
                         </div>
                         <div>
@@ -105,13 +111,23 @@ function OurFamily() {
                                 </p>
                             </div>
                         </div>
-                        <div className="relative order-1 lg:order-2">
-                            <img
-                                src={img2}
-                                alt="Gita B.K. at OHCDS"
-                                className="rounded-3xl shadow-xl w-full h-80 lg:h-[400px] object-cover"
-                            />
-                            <div className="absolute -bottom-3 -left-3 bg-primary text-primary-foreground px-5 py-2 rounded-xl font-semibold text-sm shadow-lg">
+                        <div className="portrait-card cursor-pointer order-1 lg:order-2">
+                            {/* Decorative dots - top right */}
+                            <div className="portrait-dots -top-6 -right-6 portrait-float" />
+                            {/* Decorative corner accent - top right */}
+                            <div className="portrait-corner -top-4 -right-4 rounded-tr-2xl border-b-0 border-l-0" />
+                            <div className="relative overflow-hidden rounded-3xl">
+                                <img
+                                    src="/mom.jpg"
+                                    alt="Gita B.K. at OHCDS"
+                                    className="portrait-img rounded-3xl w-full h-80 lg:h-[400px] object-cover"
+                                />
+                                <div className="portrait-overlay" />
+                            </div>
+                            {/* Decorative dots - bottom left */}
+                            <div className="portrait-dots -bottom-6 -left-6 portrait-float" style={{ animationDelay: '1.5s' }} />
+                            <div className="portrait-badge absolute -bottom-3 -left-3 bg-primary text-primary-foreground px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg flex items-center gap-2">
+                                <Heart className="h-3.5 w-3.5" />
                                 Co-Founder
                             </div>
                         </div>

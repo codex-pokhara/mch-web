@@ -3,7 +3,6 @@ import {
     Award,
     BookCheck,
     Clock,
-    Download,
     FileCheck,
     Shield,
     Sun,
@@ -58,17 +57,17 @@ function Transparency() {
                 description="Full accountability. Every rupee accounted for. Your trust is our foundation."
             />
 
-            {/* Budget Summary */}
+            {/* Budget Allocation */}
             <section className="py-24 md:py-32 bg-background">
                 <MaxWidthWrapper>
                     <div className="max-w-4xl mx-auto">
                         <div className="text-center mb-16">
                             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 tracking-tight">
-                                Where Your Money Goes
+                                How We Allocate Our Budget
                             </h2>
                             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                                A simple breakdown of how every dollar
-                                is spent caring for our 40 children.
+                                A transparent breakdown of how our resources
+                                are distributed to care for our children.
                             </p>
                         </div>
 
@@ -92,32 +91,9 @@ function Transparency() {
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-                            <div className="bg-muted rounded-2xl p-6 text-center">
-                                <div className="text-3xl font-bold text-primary mb-1">$197</div>
-                                <div className="text-sm text-muted-foreground">Cost per child / month</div>
-                            </div>
-                            <div className="bg-muted rounded-2xl p-6 text-center">
-                                <div className="text-3xl font-bold text-primary mb-1">$65,000</div>
-                                <div className="text-sm text-muted-foreground">Annual operating budget</div>
-                            </div>
-                            <div className="bg-muted rounded-2xl p-6 text-center">
-                                <div className="text-3xl font-bold text-primary mb-1">40</div>
-                                <div className="text-sm text-muted-foreground">Children supported</div>
-                            </div>
-                        </div>
-
-                        <div className="text-center">
-                            <a
-                                href="/MCH.pdf"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Button variant="outline" size="lg">
-                                    <Download className="h-4 w-4" />
-                                    Download detailed budget (PDF)
-                                </Button>
-                            </a>
+                        <div className="bg-muted rounded-2xl p-6 text-center max-w-xs mx-auto">
+                            <div className="text-3xl font-bold text-primary mb-1">$197</div>
+                            <div className="text-sm text-muted-foreground">Cost per child / month</div>
                         </div>
                     </div>
                 </MaxWidthWrapper>
