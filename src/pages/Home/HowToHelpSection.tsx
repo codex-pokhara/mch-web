@@ -50,14 +50,10 @@ function WhereMoneyGoesSection() {
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
                         <div className="bg-muted rounded-2xl p-6 text-center hover:shadow-sm transition-shadow">
                             <div className="text-3xl font-bold text-primary mb-1">$197</div>
                             <div className="text-sm text-muted-foreground">Cost per child / month</div>
-                        </div>
-                        <div className="bg-muted rounded-2xl p-6 text-center hover:shadow-sm transition-shadow">
-                            <div className="text-3xl font-bold text-primary mb-1">$65K</div>
-                            <div className="text-sm text-muted-foreground">Annual operating budget</div>
                         </div>
                         <div className="bg-muted rounded-2xl p-6 text-center hover:shadow-sm transition-shadow">
                             <div className="text-3xl font-bold text-primary mb-1">40</div>
