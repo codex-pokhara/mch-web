@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
-import { X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
@@ -12,7 +12,7 @@ export interface Photo {
     caption: string;
     created_at: string;
     album: number;
-  }
+}
 
 export interface Album {
     id: number;
@@ -21,30 +21,93 @@ export interface Album {
     description: string;
     cover_image: string;
     created_at: string;
-    photos: Photo[];
-  }
+    photo_count: number;
+}
 
 interface GalleryProps {
-  selectedAlbum: string | null;
-  setSelectedAlbum: (id: string | null) => void;
-  albums: Album[];
-  currentAlbum: Album | undefined;
-  currentImages: Photo[];
-  selectedImage: number | null;
-  openImage: (index: number) => void;
-  closeImage: () => void;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void;
-  prevImage: () => void;
-  nextImage: () => void;
+    selectedAlbum: Album | null;
+    onSelectAlbum: (album: Album) => void;
+    onBackToAlbums: () => void;
+    albums: Album[];
+    albumsPage: number;
+    albumsTotalPages: number;
+    onAlbumsPageChange: (page: number) => void;
+    photos: Photo[];
+    photosLoading: boolean;
+    photosPage: number;
+    photosTotalPages: number;
+    onPhotosPageChange: (page: number) => void;
+    selectedImage: number | null;
+    openImage: (index: number) => void;
+    closeImage: () => void;
+    handleKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void;
+    prevImage: () => void;
+    nextImage: () => void;
+}
+
+function Pagination({
+    page,
+    totalPages,
+    onPageChange,
+}: {
+    page: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+}) {
+    if (totalPages <= 1) return null;
+
+    return (
+        <div className="flex items-center justify-center gap-2 mt-10">
+            <button
+                type="button"
+                onClick={() => onPageChange(page - 1)}
+                disabled={page <= 1}
+                className="p-2 rounded-lg border border-border bg-background text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+                <ChevronLeft size={18} />
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <button
+                    key={p}
+                    type="button"
+                    onClick={() => onPageChange(p)}
+                    className={`min-w-[36px] h-9 rounded-lg text-sm font-medium transition-colors ${
+                        p === page
+                            ? 'bg-primary text-primary-foreground'
+                            : 'border border-border bg-background text-foreground hover:bg-muted'
+                    }`}
+                >
+                    {p}
+                </button>
+            ))}
+
+            <button
+                type="button"
+                onClick={() => onPageChange(page + 1)}
+                disabled={page >= totalPages}
+                className="p-2 rounded-lg border border-border bg-background text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+                <ChevronRight size={18} />
+            </button>
+        </div>
+    );
 }
 
 function GallerySection(props: GalleryProps) {
     const {
         selectedAlbum,
-        setSelectedAlbum,
+        onSelectAlbum,
+        onBackToAlbums,
         albums,
-        currentAlbum,
-        currentImages,
+        albumsPage,
+        albumsTotalPages,
+        onAlbumsPageChange,
+        photos,
+        photosLoading,
+        photosPage,
+        photosTotalPages,
+        onPhotosPageChange,
         selectedImage,
         openImage,
         closeImage,
@@ -72,7 +135,7 @@ function GallerySection(props: GalleryProps) {
                                     <div
                                         key={album.id}
                                         className="relative group cursor-pointer"
-                                        onClick={() => setSelectedAlbum(album.slug)}
+                                        onClick={() => onSelectAlbum(album)}
                                     >
                                         <div className="relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
                                             <img
@@ -83,7 +146,7 @@ function GallerySection(props: GalleryProps) {
                                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                                                 <h3 className="text-white font-semibold text-lg">{album.title}</h3>
                                                 <p className="text-gray-200 text-sm">
-                                                    {album.photos.length}
+                                                    {album.photo_count}
                                                     {' '}
                                                     photos
                                                 </p>
@@ -92,6 +155,12 @@ function GallerySection(props: GalleryProps) {
                                     </div>
                                 ))}
                             </div>
+
+                            <Pagination
+                                page={albumsPage}
+                                totalPages={albumsTotalPages}
+                                onPageChange={onAlbumsPageChange}
+                            />
                         </>
                     ) : (
                         // Selected Album View
@@ -100,44 +169,60 @@ function GallerySection(props: GalleryProps) {
                                 <div>
                                     <button
                                         type="button"
-                                        onClick={() => setSelectedAlbum(null)}
+                                        onClick={onBackToAlbums}
                                         className="text-primary hover:text-blue-700 font-medium mb-2"
                                     >
                                         ← Back to Albums
                                     </button>
-                                    <h2 className="text-3xl font-bold text-foreground">{currentAlbum?.title}</h2>
+                                    <h2 className="text-3xl font-bold text-foreground">{selectedAlbum.title}</h2>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {currentImages.map((image, index) => (
-                                    <div
-                                        key={image.image}
-                                        className="relative group cursor-pointer"
-                                        onClick={() => openImage(index)}
-                                    >
-                                        <div className="relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
-                                            <img
-                                                src={image.image}
-                                                alt={image.caption}
-                                                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                        </div>
+                            {photosLoading ? (
+                                <div className="flex items-center justify-center min-h-[300px]">
+                                    <div className="text-center">
+                                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4" />
+                                        <p className="text-muted-foreground">Loading photos...</p>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                        {photos.map((image, index) => (
+                                            <div
+                                                key={image.id}
+                                                className="relative group cursor-pointer"
+                                                onClick={() => openImage(index)}
+                                            >
+                                                <div className="relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+                                                    <img
+                                                        src={image.image}
+                                                        alt={image.caption}
+                                                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <Pagination
+                                        page={photosPage}
+                                        totalPages={photosTotalPages}
+                                        onPageChange={onPhotosPageChange}
+                                    />
+                                </>
+                            )}
                         </>
                     )}
                 </MaxWidthWrapper>
             </section>
 
             {/* Image Modal */}
-            {selectedImage !== null && currentImages[selectedImage] && (
+            {selectedImage !== null && photos[selectedImage] && (
                 <div
                     className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                     onClick={closeImage}
                     onKeyDown={handleKeyDown}
-                    // tabIndex={0} // Added for keyboard accessibility
                 >
                     <div className="relative max-w-4xl max-h-full">
                         <button
@@ -149,8 +234,8 @@ function GallerySection(props: GalleryProps) {
                         </button>
 
                         <img
-                            src={currentImages[selectedImage].image}
-                            alt={currentImages[selectedImage].caption}
+                            src={photos[selectedImage].image}
+                            alt={photos[selectedImage].caption}
                             className="max-w-full max-h-full object-contain"
                             onClick={(e) => e.stopPropagation()}
                         />
@@ -169,7 +254,7 @@ function GallerySection(props: GalleryProps) {
                             </button>
                         )}
 
-                        {selectedImage < currentImages.length - 1 && (
+                        {selectedImage < photos.length - 1 && (
                             <button
                                 type="button"
                                 onClick={(e) => {
@@ -187,7 +272,7 @@ function GallerySection(props: GalleryProps) {
                             {selectedImage + 1}
                             {' '}
                             /
-                            {currentImages.length}
+                            {photos.length}
                         </div>
                     </div>
                 </div>
