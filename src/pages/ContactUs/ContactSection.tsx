@@ -207,7 +207,7 @@ function ContactSection() {
                                         <ContactIcon className="h-5 w-5 text-primary mr-3 mt-1" />
                                         <div>
                                             <p className="font-medium text-gray-900">Phone</p>
-                                            <p className="text-gray-600">986-0506473</p>
+                                            <p className="text-gray-600">9860469271</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start">
@@ -259,7 +259,7 @@ function ContactSection() {
                                 <p className="text-gray-700 mb-2">
                                     For urgent matters outside office hours:
                                 </p>
-                                <p className="text-red-600 font-semibold">986-0506473 ext. 911</p>
+                                <p className="text-red-600 font-semibold">9860469271 ext. 911</p>
                             </div>
                         </div>
                     </div>

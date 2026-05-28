@@ -288,7 +288,7 @@ function GetInvolved() {
                                     <div>
                                         <h3 className="font-semibold text-foreground mb-1">Phone</h3>
                                         <p className="text-sm text-muted-foreground">
-                                            +977 986-0506473
+                                            +977 9860469271
                                         </p>
                                     </div>
                                 </div>
