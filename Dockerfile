@@ -8,14 +8,14 @@ ENV VITE_APP_SERVER_URL=https://mchapi.codex.com.np/api
 WORKDIR /app
 
 # Copy package files
-COPY package.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
 RUN apk add --no-cache curl gcc g++ make python3 python3-dev py3-setuptools py3-pip
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9
 
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Install serve globally
 RUN npm install -g serve
