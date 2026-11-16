@@ -8,58 +8,63 @@ import {
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
+    [
+        'press inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-[3px]',
+        'font-sans font-semibold [font-stretch:112.5%] tracking-[0.01em] cursor-pointer select-none',
+        'disabled:pointer-events-none disabled:opacity-50',
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    ].join(' '),
     {
         variants: {
             variant: {
-                default:
-          'bg-primary text-primary-foreground shadow-sm hover:bg-primary/85 hover:shadow-md',
-                accent:
-          'bg-accent text-accent-foreground shadow-sm hover:bg-accent/85 hover:shadow-md',
-                destructive:
-          'bg-destructive text-white shadow-sm hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-                outline:
-          'border-2 border-border bg-transparent hover:bg-muted hover:border-primary/30 text-foreground',
-                secondary:
-          'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-                ghost:
-          'hover:bg-muted text-foreground dark:hover:bg-muted/50',
-                link: 'text-primary underline-offset-4 hover:underline',
+                stamp: 'bg-airmail-red text-sheet hover:bg-airmail-red-deep',
+                ink: 'bg-ink text-sheet hover:bg-airmail-navy',
+                outline: 'border border-ink/70 text-ink hover:bg-ink hover:text-sheet',
+                ghost: 'text-ink hover:bg-paper-deep',
+                onInk: 'bg-sheet text-ink hover:bg-paper',
             },
             size: {
-                default: 'h-10 px-6 py-2.5 has-[>svg]:px-4',
-                sm: 'h-8 px-4 py-1.5 text-xs gap-1.5 has-[>svg]:px-2.5',
-                lg: 'h-12 px-8 py-3 text-base has-[>svg]:px-6',
-                xl: 'h-14 px-10 py-4 text-base has-[>svg]:px-8',
-                icon: 'size-10',
+                default: 'h-11 px-5 text-[0.9375rem]',
+                sm: 'h-9 px-4 text-sm',
+                lg: 'h-13 px-7 text-base',
+                icon: 'size-11',
             },
         },
         defaultVariants: {
-            variant: 'default',
+            variant: 'ink',
             size: 'default',
         },
     },
 );
+
+type ButtonProps = React.ComponentProps<'button'>
+    & VariantProps<typeof buttonVariants>
+    & { asChild?: boolean };
 
 function Button({
     className,
     variant,
     size,
     asChild = false,
+    type,
     ...props
-}: React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-    const Comp = asChild ? Slot : 'button';
-
+}: ButtonProps) {
+    if (asChild) {
+        return (
+            <Slot
+                className={cn(buttonVariants({ variant, size, className }))}
+                {...props}
+            />
+        );
+    }
     return (
-        <Comp
-            data-slot="button"
+        // Defaults to "button" so a stray button inside a form never submits it.
+        <button
+            type={type === 'submit' ? 'submit' : 'button'}
             className={cn(buttonVariants({ variant, size, className }))}
             {...props}
         />
     );
 }
 
-export { Button, buttonVariants };
+export { Button };

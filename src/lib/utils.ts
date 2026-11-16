@@ -8,16 +8,27 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
+/** Reads a value written by setLocalStorage. Blocked storage or bad data reads as empty. */
 export function readLocalStorage(key: string): string | undefined {
-    const mem = localStorage.getItem(key);
-    if (mem === undefined || mem === null) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (raw === null) {
+            return undefined;
+        }
+        return JSON.parse(raw)?.item ?? undefined;
+    } catch {
         return undefined;
     }
-    return JSON.parse(mem)?.item ?? undefined;
 }
+
 export function setLocalStorage(key: string, value: string | null | undefined) {
-    localStorage.setItem(key, JSON.stringify({ item: value ?? null }));
-}
-export function clearLocalStorage(key: string) {
-    setLocalStorage(key, null);
+    try {
+        if (value === null || value === undefined) {
+            localStorage.removeItem(key);
+            return;
+        }
+        localStorage.setItem(key, JSON.stringify({ item: value }));
+    } catch {
+        // Private mode or blocked storage: the session simply does not persist.
+    }
 }

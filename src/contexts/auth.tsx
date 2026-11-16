@@ -1,26 +1,23 @@
 import { createContext } from 'react';
 
 export interface AuthState {
-  id: number | string;
-  name: string;
+    id: number | string;
+    name: string;
 }
 
-const AuthContext = createContext<{
+export interface AuthContextValue {
     state: AuthState | undefined;
-    setState:(value: AuthState | undefined) => void;
-    logout: () => void;
+    /** 'checking' while a stored token is being verified, so guards do not redirect too early. */
+    status: 'checking' | 'ready';
     login: (token: string, value: AuthState) => void;
-        }>({
-            state: undefined,
-            setState: () => {
-                console.warn('AuthContext.setState called without a provider');
-            },
-            logout: () => {
-                console.warn('Logout called without a provider');
-            },
-            login: () => {
-                console.warn('Login called without a provider');
-            },
-        });
+    logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextValue>({
+    state: undefined,
+    status: 'ready',
+    login: () => undefined,
+    logout: () => undefined,
+});
 
 export default AuthContext;

@@ -2,45 +2,46 @@ import { useContext } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import { Button } from '@/components/ui/button';
 import AuthContext from '@/contexts/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { baseRequest } from '@/lib/base';
+import { readLocalStorage } from '@/lib/utils';
 
-interface SuccessProps{
-    data: {
-        message:string;
-    }
-}
-
-const logout = async (body: unknown) => {
+async function logout() {
     const response = await baseRequest({
         url: '/logout',
         method: 'POST',
-        body: JSON.stringify(body),
+        body: { token: readLocalStorage('refresh-token') },
         contentType: 'application/json',
     });
-
     return response;
-};
+}
 
 function Dashboard() {
-    const { logout: userLogout } = useContext(AuthContext);
-    const logoutMutation = useMutation({
+    usePageTitle('Account');
+    const { state, logout: clearSession } = useContext(AuthContext);
+    const mutation = useMutation({
         mutationFn: logout,
-        onSuccess: (data: SuccessProps) => {
-            toast(data.data.message);
-            userLogout();
-        },
-        onError: (error: unknown) => {
-            toast((error as Error).message);
+        onSettled: () => {
+            clearSession();
+            toast('Signed out');
         },
     });
 
-    const handleLogout = () => {
-        logoutMutation.mutate({ token: localStorage.getItem('refresh-token') });
-    };
     return (
-        <div><Button onClick={handleLogout}>Logout</Button></div>
+        <MaxWidthWrapper className="py-20 md:py-28">
+            <h1 className="text-4xl text-ink">
+                Signed in as
+                {' '}
+                {state?.name}
+                .
+            </h1>
+            <Button variant="outline" className="mt-8" onClick={() => mutation.mutate()} disabled={mutation.isPending}>
+                {mutation.isPending ? 'Signing out…' : 'Sign out'}
+            </Button>
+        </MaxWidthWrapper>
     );
 }
 

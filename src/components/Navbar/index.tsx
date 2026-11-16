@@ -1,8 +1,13 @@
 import {
     useEffect,
+    useRef,
     useState,
 } from 'react';
-import { Link } from 'react-router-dom';
+import {
+    Link,
+    NavLink,
+    useLocation,
+} from 'react-router-dom';
 import {
     Menu,
     X,
@@ -14,143 +19,135 @@ import { Button } from '../ui/button';
 import { navigation } from '@/constants';
 import { cn } from '@/lib/utils';
 
+function Wordmark() {
+    return (
+        <Link to="/" className="flex items-center gap-3 rounded-[2px]" aria-label="Mountain Children's Home, home page">
+            <img src="/logo.png" alt="" width={74} height={40} className="h-9 w-auto sm:h-10" />
+            <span className="flex flex-col leading-none">
+                <span className="font-sans text-[0.95rem] font-bold text-ink [font-stretch:112.5%] sm:text-base">
+                    Mountain Children&apos;s Home
+                </span>
+                <span className="postal mt-1 text-[0.625rem] text-ink-faint">OHCDS · Kathmandu</span>
+            </span>
+        </Link>
+    );
+}
+
+function navLinkClass({ isActive }: { isActive: boolean }) {
+    return cn(
+        'relative py-2 font-sans text-[0.9375rem] font-medium [font-stretch:106%] transition-colors duration-150',
+        'after:absolute after:inset-x-0 after:bottom-0.5 after:h-[2px] after:origin-left after:bg-airmail-red after:transition-transform after:duration-200 after:ease-out',
+        isActive ? 'text-ink after:scale-x-100' : 'text-ink-soft hover:text-ink after:scale-x-0',
+    );
+}
+
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const { pathname } = useLocation();
+    const menuRef = useRef<HTMLDivElement>(null);
+    const toggleRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    });
+        const onScroll = () => setScrolled(window.scrollY > 8);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     useEffect(() => {
-        if (isMenuOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
+        setIsMenuOpen(false);
+    }, [pathname]);
+
+    useEffect(() => {
+        if (!isMenuOpen) {
+            return undefined;
         }
+        const toggle = toggleRef.current;
+        document.body.style.overflow = 'hidden';
+        menuRef.current?.querySelector('a')?.focus();
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setIsMenuOpen(false);
+            }
+        };
+        window.addEventListener('keydown', onKey);
         return () => {
             document.body.style.overflow = '';
+            window.removeEventListener('keydown', onKey);
+            toggle?.focus();
         };
     }, [isMenuOpen]);
 
     return (
-        <header
-            className={cn(
-                'w-full sticky top-0 transition-all duration-500 z-40',
-                scrolled
-                    ? 'bg-white/80 backdrop-blur-2xl shadow-md'
-                    : 'bg-background/95 backdrop-blur-sm',
-            )}
-        >
-            <MaxWidthWrapper>
-                <div className="flex h-20 items-center justify-between">
-                    <Link
-                        to="/"
-                        className="flex items-center gap-3"
-                    >
-                        <img
-                            src="Vector.png"
-                            alt="OHCDS logo"
-                            className="h-12"
-                        />
-                        <div className="hidden sm:block">
-                            <span className="text-sm font-bold leading-tight block text-foreground">
-                                OHCDS
-                            </span>
-                            <span className="text-xs leading-tight block text-muted-foreground">
-                                Mountain Children&apos;s Home
-                            </span>
-                        </div>
-                    </Link>
-                    <nav className="hidden lg:flex gap-8">
-                        {navigation.map((item) => (
-                            <Link
-                                to={item.url}
-                                key={item.title}
-                                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-200"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                {item.title}
-                            </Link>
-                        ))}
-                    </nav>
-                    <div className="hidden lg:flex gap-4">
-                        <Link to="/get-involved">
-                            <Button variant="accent" className="px-7">
-                                Get Involved
+        <>
+            <header
+                className={cn(
+                    'sticky top-0 z-40 border-b bg-paper/95 backdrop-blur-sm transition-[border-color] duration-200 supports-[backdrop-filter]:bg-paper/85',
+                    scrolled ? 'border-ink/15' : 'border-transparent',
+                )}
+            >
+                <MaxWidthWrapper>
+                    <div className="flex h-18 items-center justify-between gap-6">
+                        <Wordmark />
+                        <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
+                            {navigation.map((item) => (
+                                <NavLink key={item.url} to={item.url} className={navLinkClass}>
+                                    {item.title}
+                                </NavLink>
+                            ))}
+                        </nav>
+                        <div className="flex items-center gap-2">
+                            <Button asChild variant="stamp" size="sm" className="hidden sm:inline-flex">
+                                <Link to="/get-involved">Donate</Link>
                             </Button>
-                        </Link>
-                    </div>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="lg:hidden"
-                        onClick={() => setIsMenuOpen((prev) => !prev)}
-                    >
-                        <Menu className="h-6 w-6" />
-                        <span className="sr-only">Toggle menu</span>
-                    </Button>
-                </div>
-            </MaxWidthWrapper>
-            {isMenuOpen && (
-                <div className="fixed inset-0 z-50 bg-background lg:hidden overflow-y-auto h-screen">
-                    <MaxWidthWrapper>
-                        <div className="flex h-20 items-center justify-between">
-                            <Link
-                                to="/"
-                                className="flex items-center gap-3"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                <img
-                                    src="Vector.png"
-                                    className="h-12 w-auto"
-                                    alt="OHCDS logo"
-                                />
-                                <span className="text-sm font-bold text-foreground">
-                                    OHCDS
-                                </span>
-                            </Link>
                             <Button
+                                ref={toggleRef}
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => setIsMenuOpen(false)}
+                                className="lg:hidden"
+                                aria-expanded={isMenuOpen}
+                                aria-controls="mobile-menu"
+                                onClick={() => setIsMenuOpen((open) => !open)}
                             >
-                                <X className="h-6 w-6" />
-                                <span className="sr-only">Close menu</span>
+                                {isMenuOpen ? <X className="size-6" strokeWidth={1.75} /> : <Menu className="size-6" strokeWidth={1.75} />}
+                                <span className="sr-only">{isMenuOpen ? 'Close menu' : 'Open menu'}</span>
                             </Button>
                         </div>
-                    </MaxWidthWrapper>
-                    <MaxWidthWrapper>
-                        <nav className="grid gap-6 py-6">
+                    </div>
+                </MaxWidthWrapper>
+            </header>
+
+            {isMenuOpen && (
+                <div
+                    id="mobile-menu"
+                    ref={menuRef}
+                    className="rise-in fixed inset-x-0 top-18 bottom-0 z-40 overflow-y-auto border-t border-ink/15 bg-paper lg:hidden"
+                >
+                    <MaxWidthWrapper className="flex min-h-full flex-col pt-4 pb-10">
+                        <nav aria-label="Main" className="flex flex-col">
+                            <NavLink to="/" end className="border-b border-ink/10 py-4 font-sans text-2xl font-semibold text-ink [font-stretch:112.5%]">
+                                Home
+                            </NavLink>
                             {navigation.map((item) => (
-                                <Link
+                                <NavLink
+                                    key={item.url}
                                     to={item.url}
-                                    key={item.title}
-                                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors duration-200"
-                                    onClick={() => setIsMenuOpen(false)}
+                                    className={({ isActive }) => cn(
+                                        'border-b border-ink/10 py-4 font-sans text-2xl font-semibold [font-stretch:112.5%]',
+                                        isActive ? 'text-airmail-red' : 'text-ink',
+                                    )}
                                 >
                                     {item.title}
-                                </Link>
+                                </NavLink>
                             ))}
-                            <Link
-                                to="/get-involved"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                <Button
-                                    variant="accent"
-                                    className="w-full"
-                                >
-                                    Get Involved
-                                </Button>
-                            </Link>
                         </nav>
+                        <Button asChild variant="stamp" size="lg" className="mt-8 w-full">
+                            <Link to="/get-involved">Donate or sponsor a child</Link>
+                        </Button>
                     </MaxWidthWrapper>
                 </div>
             )}
-        </header>
+        </>
     );
 }

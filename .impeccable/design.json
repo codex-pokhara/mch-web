@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T12:00:00Z",
+  "title": "Design System: Mountain Children's Home",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Airmail Paper", "canonical": "#e9eff4", "tonalRamp": ["#1a2530", "#34424f", "#526170", "#748392", "#98a6b3", "#bcc8d3", "#dbe4ec", "#f2f6f9"] },
+      "sheet": { "role": "neutral", "displayName": "Letter Sheet", "canonical": "#f7f9fb", "tonalRamp": ["#1c2228", "#373e45", "#565e66", "#7a828a", "#a0a7ae", "#c6ccd1", "#e6eaee", "#f7f9fb"] },
+      "ink": { "role": "neutral", "displayName": "Navy Ink", "canonical": "#16224a", "tonalRamp": ["#0b1230", "#16224a", "#2b3866", "#46527a", "#6b7697", "#959db6", "#c2c8d8", "#e9ecf3"] },
+      "airmail-red": { "role": "primary", "displayName": "Airmail Red", "canonical": "#b8142b", "tonalRamp": ["#3d0610", "#650b1a", "#96101f", "#b8142b", "#d6434f", "#e8797e", "#f3b0b1", "#fbe3e3"] },
+      "airmail-navy": { "role": "secondary", "displayName": "Airmail Navy", "canonical": "#1d2f6f", "tonalRamp": ["#0b1333", "#14214f", "#1d2f6f", "#344a8f", "#5a6fae", "#8798c9", "#b8c3e1", "#e6eaf5"] },
+      "postmark": { "role": "tertiary", "displayName": "Postmark Violet", "canonical": "#5b4f86", "tonalRamp": ["#1e1a2e", "#342d4f", "#4a406d", "#5b4f86", "#7d72a6", "#a399c3", "#cac3de", "#efecf6"] },
+      "brand-teal": { "role": "accent", "displayName": "Logo Teal", "canonical": "#4a8f85", "tonalRamp": ["#122c28", "#1f4741", "#2f655c", "#4a8f85", "#6eaaa1", "#98c5be", "#c4dfdb", "#ecf6f4"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero letter headline and page titles, Archivo at 112.5% width." },
+      "heading": { "displayName": "Heading", "purpose": "Section titles, written as sentences with a full stop." },
+      "postal": { "displayName": "Postal caps", "purpose": "Labels, dates, meta and form labels at 125% width. Never an eyebrow." },
+      "body": { "displayName": "Letter body", "purpose": "All sentences, in Literata." },
+      "lead": { "displayName": "Lead", "purpose": "First paragraph under a title." }
+    },
+    "shadows": [
+      { "name": "stamp", "value": "drop-shadow(0 10px 18px rgb(22 34 74 / 0.16)) drop-shadow(0 2px 3px rgb(22 34 74 / 0.12))", "purpose": "Perforated stamps; a filter, since the mask clips box-shadow." },
+      { "name": "paper", "value": "0 18px 40px -24px rgb(22 34 74 / 0.45)", "purpose": "Postcards and the loose photo print." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Entrances, presses, the postmark strike." },
+      { "name": "press", "value": "transform 160ms ease-out; scale(0.97) on :active", "purpose": "Every button and pressable." },
+      { "name": "postmark-strike", "value": "420ms ease-out, 520ms delay, scale 1.35 to 1, rotate -6 to -14deg", "purpose": "The hero's one signature moment." },
+      { "name": "digit-roll", "value": "1100ms ease-out, 90ms stagger per digit", "purpose": "Franked figures, once on first view." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action per view, in airmail red.",
+      "html": "<button class=\"ds-btn-primary\">Sponsor a child</button>",
+      "css": ".ds-btn-primary { background: #b8142b; color: #f7f9fb; height: 44px; padding: 0 20px; border: 0; border-radius: 3px; font: 600 15px/1 Archivo, sans-serif; font-stretch: 112.5%; cursor: pointer; transition: transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 160ms ease; } .ds-btn-primary:hover { background: #96101f; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #1d2f6f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action beside the primary.",
+      "html": "<button class=\"ds-btn-outline\">Read our story</button>",
+      "css": ".ds-btn-outline { background: transparent; color: #16224a; height: 44px; padding: 0 20px; border: 1px solid rgb(22 34 74 / 0.7); border-radius: 3px; font: 600 15px/1 Archivo, sans-serif; font-stretch: 112.5%; cursor: pointer; transition: transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 160ms ease, color 160ms ease; } .ds-btn-outline:hover { background: #16224a; color: #f7f9fb; } .ds-btn-outline:active { transform: scale(0.97); } .ds-btn-outline:focus-visible { outline: 2px solid #1d2f6f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ruled Field",
+      "kind": "input",
+      "refersTo": "input-ruled",
+      "description": "Letter-paper input: label above in postal caps, a single rule below.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Your name</span><input class=\"ds-field-input\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-field-label { font: 600 11px/1.3 Archivo, sans-serif; font-stretch: 125%; letter-spacing: 0.12em; text-transform: uppercase; color: #46527a; } .ds-field-input { border: 0; border-bottom: 1px solid rgb(22 34 74 / 0.3); background: transparent; padding: 10px 0; font: 18px/1.5 Literata, serif; color: #16224a; } .ds-field-input:focus { outline: none; border-bottom-color: #1d2f6f; }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Header link; the active page grows a red underline from the left.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-active\" href=\"#\">Our Family</a><a class=\"ds-nav-link\" href=\"#\">Impact</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 28px; } .ds-nav-link { position: relative; padding: 8px 0; font: 500 15px/1 Archivo, sans-serif; color: #46527a; text-decoration: none; } .ds-nav-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; background: #b8142b; transform: scaleX(0); transform-origin: left; transition: transform 200ms ease-out; } .ds-nav-link:hover { color: #16224a; } .ds-active { color: #16224a; } .ds-active::after { transform: scaleX(1); }"
+    },
+    {
+      "name": "Airmail Letter Sheet",
+      "kind": "custom",
+      "refersTo": "letter-sheet",
+      "description": "The chevron-framed sheet for letter moments: hero, reply slip, contact form.",
+      "html": "<div class=\"ds-letter\"><p class=\"ds-letter-salute\">Dear friend,</p><h2 class=\"ds-letter-title\">Write back to Dadagaun.</h2></div>",
+      "css": ".ds-letter { background: #f7f9fb; padding: 40px; border: 8px solid transparent; border-image: repeating-linear-gradient(-45deg, #b8142b 0 12px, #f7f9fb 12px 18px, #1d2f6f 18px 30px, #f7f9fb 30px 36px) 8; } .ds-letter-salute { font: italic 24px/1.4 Literata, serif; color: #46527a; margin: 0; } .ds-letter-title { font: 700 40px/1.05 Archivo, sans-serif; font-stretch: 112.5%; letter-spacing: -0.02em; color: #16224a; margin: 8px 0 0; }"
+    },
+    {
+      "name": "Postal Label",
+      "kind": "chip",
+      "refersTo": "postal",
+      "description": "The By air mail label sticker.",
+      "html": "<span class=\"ds-airmail\"><span>By air mail</span><span class=\"ds-airmail-sub\">Par avion</span></span>",
+      "css": ".ds-airmail { display: inline-flex; flex-direction: column; background: #1d2f6f; color: #f7f9fb; padding: 6px 12px; border-radius: 2px; font: 600 10px/1.3 Archivo, sans-serif; font-stretch: 125%; letter-spacing: 0.12em; text-transform: uppercase; } .ds-airmail-sub { opacity: 0.7; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "A letter by air mail.",
+    "overview": "The site is a letter from the family in Dadagaun to a friend abroad. It opens with \"Dear friend,\" and closes with a reply slip. Everything is built from the objects of international post: thin blue airmail paper, the red and navy chevron border, perforated stamps, rubber postmarks and franking-meter numerals. Those objects carry real content. The children's photo is printed as the stamp, the founding year is the postmark, and the approved figures are franked in red.\n\nThe page is calm and plainly honest, because its reader is a stranger deciding whether to trust a children's home with money. Postal ornament appears only at the moments a letter would carry it, and everything else is ruled paper and good type.",
+    "keyCharacteristics": [
+      "Cool airmail-blue ground, never warm cream.",
+      "A wide grotesque speaks in postal labels and headlines; a reading serif carries the letter voice.",
+      "Ruled lines and negative space instead of cards.",
+      "One primary action per view, in airmail red."
+    ],
+    "rules": [
+      { "name": "The Chevron Rule", "body": "The red and navy chevron frames only letter moments: the hero letter sheet, the reply slip and the \"Write to us\" form, plus the footer's top edge. It is never used as a divider or a decorative stripe elsewhere.", "section": "colors" },
+      { "name": "The Ink Rule", "body": "Text is navy ink, never gray or black. Secondary text on a navy section uses the sheet colour at reduced opacity, not gray.", "section": "colors" },
+      { "name": "The Two Voices Rule", "body": "Archivo is the post office: labels, headlines, numbers, controls. Literata is the family writing: everything said in sentences. A paragraph is never set in Archivo.", "section": "typography" }
+    ],
+    "dos": [
+      "Do let real content carry the postal objects: photos as stamps, years as postmarks, figures as franking.",
+      "Do keep claims to the approved figures in PRODUCT.md and derive nothing new.",
+      "Do use ruled lists and two-column splits instead of card grids.",
+      "Do honour prefers-reduced-motion: the postmark and digit roll settle instantly."
+    ],
+    "donts": [
+      "Don't use eyebrow labels above headings, or em dashes anywhere in copy.",
+      "Don't spread the chevron border or postmarks onto every section; they mark letter moments only.",
+      "Don't use warm cream, gray text or pure black.",
+      "Don't set the full-bleed dimmed-photo hero with a stat bar and three icon cards that this site replaced."
+    ]
+  }
+}

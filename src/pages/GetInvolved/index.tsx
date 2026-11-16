@@ -1,306 +1,91 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Label } from '@radix-ui/react-label';
-import { useMutation } from '@tanstack/react-query';
-import {
-    Eye,
-    HandHeart,
-    Heart,
-    Mail,
-    MapPin,
-    Phone,
-} from 'lucide-react';
-import * as z from 'zod';
+import ContactForm from './ContactForm';
 
-import HeroSection from '@/components/HeroSection';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
-import { baseRequest } from '@/lib/base';
+import PageHeader from '@/components/PageHeader';
+import {
+    contact,
+    MONTHLY_COST_USD,
+} from '@/constants';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
-const postContact = async (body: ContactFormData) => {
-    const response = await baseRequest({
-        url: '/cms/contact-messages/',
-        method: 'POST',
-        body,
-        contentType: 'application/json',
-    });
-
-    if (!response.ok) {
-        throw new Error(response.data?.detail || `Error: ${response.status} - ${response.statusText}`);
-    }
-
-    return response;
-};
-
-const contactFormSchema = z.object({
-    name: z.string().min(1, { message: 'Name is required' }),
-    email: z.string().email({ message: 'Invalid email address' }),
-    phone: z.string().optional(),
-    message: z.string().min(1, { message: 'Message is required' }),
-});
-
-type ContactFormData = z.infer<typeof contactFormSchema>;
+const ways = [
+    {
+        title: 'Give',
+        text: `Every dollar goes to caring for our forty children. $${MONTHLY_COST_USD} covers one child for a whole month: food, school, clothes and healthcare.`,
+    },
+    {
+        title: 'Volunteer',
+        text: 'Share your skills and time. We welcome teachers, mentors, healthcare professionals and willing hands.',
+    },
+    {
+        title: 'Visit',
+        text: 'Come and meet the family in Budhanilkantha, Dadagaun. Write to us first and we will arrange a time.',
+    },
+];
 
 function GetInvolved() {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm<ContactFormData>({
-        resolver: zodResolver(contactFormSchema),
-        defaultValues: {
-            name: '',
-            email: '',
-            phone: '',
-            message: '',
-        },
-    });
-
-    const {
-        mutate,
-        isPending,
-        isError,
-        error,
-        isSuccess,
-    } = useMutation({
-        mutationFn: (data: ContactFormData) => postContact(data),
-        onSuccess: () => {
-            reset();
-        },
-    });
-
-    const onSubmit = (data: ContactFormData) => {
-        mutate(data);
-    };
-
-    const ways = [
-        {
-            icon: <Heart className="h-8 w-8" />,
-            title: 'Donate',
-            description: 'Every dollar goes directly to caring for our 40 children. $197 covers one child for a month.',
-            color: 'bg-accent/10 text-accent',
-        },
-        {
-            icon: <HandHeart className="h-8 w-8" />,
-            title: 'Volunteer',
-            description: 'Share your skills and time. We welcome teachers, mentors, healthcare professionals, and helping hands.',
-            color: 'bg-primary/10 text-primary',
-        },
-        {
-            icon: <Eye className="h-8 w-8" />,
-            title: 'Visit',
-            description: 'Come meet our family in Budhanilkantha, Dadagaun, Kathmandu. See the impact firsthand.',
-            color: 'bg-chart-3/10 text-chart-3',
-        },
-    ];
-
+    usePageTitle('Get involved');
     return (
         <>
-            <HeroSection
-                title="Get Involved"
-                description="Join our family. Every act of kindness changes a child's life."
+            <PageHeader
+                title="Get involved."
+                lead="Join our family. Give, volunteer or visit. Every act of kindness changes a child's life, and every letter gets a reply."
+                mark={{ ringTop: 'REPLY · DADAGAUN', small: 'PER MONTH', big: `$${MONTHLY_COST_USD}` }}
             />
 
-            {/* Three Ways to Help */}
-            <section className="py-24 md:py-32 bg-background">
-                <MaxWidthWrapper>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <section id="ways" aria-labelledby="ways-title" className="scroll-mt-24 py-20 md:py-28">
+                <MaxWidthWrapper className="grid gap-14 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
+                    <div>
+                        <h2 id="ways-title" className="text-4xl text-ink sm:text-5xl">Three ways to help.</h2>
+                        <p className="mt-6 max-w-[40ch] text-lg text-ink-soft">
+                            There is no online payment yet. Write to us below and we will reply
+                            personally with how to
+                            give, or to arrange your visit.
+                        </p>
+                    </div>
+                    <dl className="border-t border-ink/20">
                         {ways.map((way) => (
-                            <div
-                                key={way.title}
-                                className="text-center p-8 rounded-3xl bg-card shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                            >
-                                <div className={`w-16 h-16 rounded-2xl ${way.color} flex items-center justify-center mx-auto mb-6`}>
-                                    {way.icon}
-                                </div>
-                                <h3 className="text-xl font-bold text-foreground mb-3">
-                                    {way.title}
-                                </h3>
-                                <p className="text-muted-foreground leading-relaxed">
-                                    {way.description}
-                                </p>
+                            <div key={way.title} className="grid gap-2 border-b border-ink/15 py-7 sm:grid-cols-[10rem_1fr] sm:gap-8">
+                                <dt className="font-sans text-2xl font-bold text-ink [font-stretch:112.5%]">{way.title}</dt>
+                                <dd className="text-lg text-ink-soft">{way.text}</dd>
                             </div>
                         ))}
-                    </div>
-
-                    {/* Key cost figure callout */}
-                    <div className="relative bg-linear-to-br from-primary via-primary to-primary/80 text-white rounded-3xl p-12 text-center overflow-hidden shadow-xl">
-                        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/5" />
-                        <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-accent/10" />
-                        <div className="relative">
-                            <p className="text-lg mb-2 text-white/80">It costs just</p>
-                            <p className="text-6xl font-extrabold mb-2">$197</p>
-                            <p className="text-lg text-white/80">to care for one child for an entire month</p>
-                        </div>
-                    </div>
+                    </dl>
                 </MaxWidthWrapper>
             </section>
 
-            {/* Contact Form & Info */}
-            <section className="py-24 md:py-32 bg-muted">
+            <section id="write" aria-labelledby="write-title" className="scroll-mt-24 pb-24 md:pb-32">
                 <MaxWidthWrapper>
-                    <div className="text-center mb-16">
-                        <p className="text-xs font-semibold text-accent uppercase tracking-[0.2em] mb-4">
-                            Contact Us
-                        </p>
-                        <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 tracking-tight">
-                            Reach Out to Us
-                        </h2>
-                        <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                            Have questions? Want to donate, volunteer, or visit?
-                            Send us a message and we&apos;ll get back to you.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 max-w-5xl mx-auto">
-                        {/* Contact Form */}
-                        <div className="lg:col-span-3">
-                            {isSuccess && (
-                                <div className="mb-6 p-4 bg-primary/10 border-2 border-primary/20 rounded-xl">
-                                    <p className="text-primary font-medium">
-                                        Thank you for your message! We&apos;ll get back to you soon.
-                                    </p>
-                                </div>
-                            )}
-
-                            {isError && (
-                                <div className="mb-6 p-4 bg-destructive/10 border-2 border-destructive/20 rounded-xl">
-                                    <p className="text-destructive font-medium">
-                                        {error instanceof Error ? error.message : 'Failed to send message. Please try again.'}
-                                    </p>
-                                </div>
-                            )}
-
-                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                    <div>
-                                        <Label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                                            Full Name *
-                                        </Label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            disabled={isPending}
-                                            {...register('name')}
-                                            className="w-full h-12 px-4 border-2 border-border rounded-xl bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                            placeholder="Your name"
-                                        />
-                                        {errors.name && (
-                                            <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                                            Email *
-                                        </Label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            disabled={isPending}
-                                            {...register('email')}
-                                            className="w-full h-12 px-4 border-2 border-border rounded-xl bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                            placeholder="you@example.com"
-                                        />
-                                        {errors.email && (
-                                            <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">
-                                        Phone (optional)
-                                    </Label>
-                                    <input
-                                        type="tel"
-                                        id="phone"
-                                        disabled={isPending}
-                                        {...register('phone')}
-                                        className="w-full h-12 px-4 border-2 border-border rounded-xl bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                        placeholder="Your phone number"
-                                    />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                                        Message *
-                                    </Label>
-                                    <textarea
-                                        id="message"
-                                        rows={5}
-                                        disabled={isPending}
-                                        {...register('message')}
-                                        className="w-full px-4 py-3 border-2 border-border rounded-xl bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                        placeholder="Tell us how you'd like to help..."
-                                    />
-                                    {errors.message && (
-                                        <p className="mt-1 text-sm text-destructive">{errors.message.message}</p>
-                                    )}
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={isPending}
-                                    className="w-full bg-accent hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-full transition-all duration-200 shadow-sm hover:shadow-md"
-                                >
-                                    {isPending ? 'Sending...' : 'Send Message'}
-                                </button>
-                            </form>
-                        </div>
-
-                        {/* Contact Info */}
-                        <div className="lg:col-span-2 space-y-6">
-                            <div className="bg-card p-6 rounded-2xl shadow-sm">
-                                <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                        <MapPin className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-foreground mb-1">Address</h3>
-                                        <p className="text-sm text-muted-foreground">
-                                            Budhanilkantha, Dadagaun
-                                            <br />
-                                            Kathmandu, Nepal
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-card p-6 rounded-2xl shadow-sm">
-                                <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                        <Mail className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-foreground mb-1">Email</h3>
-                                        <p className="text-sm text-muted-foreground">
-                                            orphanhomedadagaun@gmail.com
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-card p-6 rounded-2xl shadow-sm">
-                                <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                        <Phone className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-foreground mb-1">Phone</h3>
-                                        <p className="text-sm text-muted-foreground">
-                                            +977 9860469271
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-accent/5 p-6 rounded-2xl border-2 border-accent/20">
-                                <h3 className="font-semibold text-foreground mb-2">Visit Us</h3>
-                                <p className="text-sm text-muted-foreground">
-                                    We welcome visitors who want to see our home and meet
-                                    the children. Please reach out to arrange a visit.
+                    <div className="airmail-frame bg-sheet">
+                        <div className="grid gap-12 p-6 sm:p-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16 lg:p-14">
+                            <div>
+                                <h2 id="write-title" className="text-4xl text-ink sm:text-5xl">Write to us.</h2>
+                                <p className="mt-5 text-lg text-ink-soft">
+                                    Questions, a donation, a visit or a skill to share. We read
+                                    every message.
                                 </p>
+                                <address className="mt-10 flex flex-col gap-6 border-t border-ink/15 pt-6 not-italic">
+                                    <div>
+                                        <p className="postal text-ink-faint">Address</p>
+                                        <p className="mt-1.5 text-ink">
+                                            {contact.addressLines.map((line) => <span key={line} className="block">{line}</span>)}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="postal text-ink-faint">Email</p>
+                                        <a className="mt-1.5 block break-all text-ink underline decoration-ink/30 hover:decoration-ink" href={`mailto:${contact.email}`}>
+                                            {contact.email}
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <p className="postal text-ink-faint">Phone</p>
+                                        <a className="mt-1.5 block text-ink underline decoration-ink/30 hover:decoration-ink tabular" href={contact.phoneHref}>
+                                            {contact.phone}
+                                        </a>
+                                    </div>
+                                </address>
                             </div>
+                            <ContactForm />
                         </div>
                     </div>
                 </MaxWidthWrapper>

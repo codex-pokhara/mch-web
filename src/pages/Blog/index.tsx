@@ -1,140 +1,146 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
-import BlogContent from './BlogContent';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import PageHeader from '@/components/PageHeader';
+import SafeImage from '@/components/SafeImage';
+import {
+    EmptyNote,
+    ErrorNote,
+    SkeletonGrid,
+} from '@/components/States';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import {
+    type BlogPost,
+    getBlogPosts,
+    queryKeys,
+} from '@/lib/api';
+import {
+    excerpt,
+    formatDate,
+    postDate,
+    postPath,
+} from '@/lib/format';
 
-import HeroSection from '@/components/HeroSection';
-import { baseRequest } from '@/lib/base';
-
-export interface Tag {
-    id: number;
-    name: string;
-    slug: string;
+function Meta({ post }: { post: BlogPost }) {
+    return (
+        <p className="postal flex flex-wrap gap-x-3 gap-y-1 text-ink-faint">
+            <time dateTime={postDate(post)}>{formatDate(postDate(post), 'short')}</time>
+            {post.reading_time > 0 && (
+                <span>
+                    {post.reading_time}
+                    {' '}
+                    min read
+                </span>
+            )}
+            {post.tags?.[0] && <span className="text-airmail-red">{post.tags[0].name}</span>}
+        </p>
+    );
 }
 
-export interface BlogPost {
-    id: number;
-    title: string;
-    slug: string;
-    cover_image: string;
-    content: string;
-    author_name: string;
-    tags: Tag[];
-    reading_time: number;
-    published_at: string;
-    status: string;
-    created_at: string;
-    updated_at: string;
+function Featured({ post }: { post: BlogPost }) {
+    return (
+        <Link to={postPath(post)} className="group grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-center md:gap-14">
+            <span className="block overflow-hidden rounded-[2px] bg-paper-deep">
+                {post.cover_image && (
+                    <SafeImage
+                        src={post.cover_image}
+                        alt=""
+                        className="aspect-[3/2] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                        decoding="async"
+                    />
+                )}
+            </span>
+            <span className="block">
+                <Meta post={post} />
+                <span className="mt-4 block font-sans text-3xl leading-tight font-bold text-ink [font-stretch:112.5%] group-hover:underline group-hover:decoration-2 sm:text-4xl">
+                    {post.title}
+                </span>
+                <span className="mt-4 block text-lg text-ink-soft">{excerpt(post.content, 220)}</span>
+                {post.author_name && (
+                    <span className="mt-5 block font-serif italic text-ink">
+                        From
+                        {' '}
+                        {post.author_name}
+                    </span>
+                )}
+            </span>
+        </Link>
+    );
 }
 
-interface BlogAPIResponse {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: BlogPost[];
+function PostItem({ post }: { post: BlogPost }) {
+    return (
+        <li>
+            <Link to={postPath(post)} className="group block">
+                <span className="block overflow-hidden rounded-[2px] bg-paper-deep">
+                    {post.cover_image && (
+                        <SafeImage
+                            src={post.cover_image}
+                            alt=""
+                            className="aspect-[3/2] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    )}
+                </span>
+                <span className="mt-5 block"><Meta post={post} /></span>
+                <span className="mt-2.5 block font-sans text-xl leading-snug font-semibold text-ink [font-stretch:106%] group-hover:underline">
+                    {post.title}
+                </span>
+                <span className="mt-2 line-clamp-3 block text-ink-soft">{excerpt(post.content, 160)}</span>
+            </Link>
+        </li>
+    );
 }
-
-const blogService = {
-    async getPosts(): Promise<BlogAPIResponse> {
-        const response = await baseRequest({
-            url: '/cms/blog-posts/',
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch blog posts: ${response.statusText}`);
-        }
-
-        return response.data;
-    },
-};
 
 function Blog() {
-    const title = 'Our Blog';
-    const description = 'Stay updated with the latest news, stories, and updates from Mountain Children Home. Read about our children&apos;s achievements, ongoing projects, and community impact.';
-
-    const [selectedCategory] = useState('All');
-
+    usePageTitle('Letters');
     const {
-        data: blogResponse,
-        isLoading,
+        data,
+        isPending,
         isError,
         error,
+        refetch,
     } = useQuery({
-        queryKey: ['blogs'],
-        queryFn: blogService.getPosts,
+        queryKey: queryKeys.blogPosts,
+        queryFn: getBlogPosts,
     });
 
-    // Get published blogs only - with proper null checks
-    const publishedBlogs = blogResponse?.results?.filter((blog) => blog.status === 'published') || [];
+    const posts = data?.results ?? [];
+    const [first, ...rest] = posts;
 
-    // Filter blogs by category (if you implement category filtering later)
-    const filteredBlogs = selectedCategory === 'All'
-        ? publishedBlogs
-        : publishedBlogs.filter((blog) => blog.tags?.some(
-            (tag) => tag.name === selectedCategory,
-        ) || false);
-
-    // Handle loading state
-    if (isLoading) {
-        return (
+    let body = null;
+    if (isPending) {
+        body = <SkeletonGrid count={3} />;
+    } else if (isError) {
+        body = <ErrorNote message={error.message} onRetry={() => refetch()} />;
+    } else if (!first) {
+        body = <EmptyNote title="No letters yet.">News, school results and stories from the home will appear here.</EmptyNote>;
+    } else {
+        body = (
             <>
-                <HeroSection title={title} description={description} />
-                <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-center justify-center min-h-[400px]">
-                        <div className="text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
-                            <p className="text-muted-foreground">Loading blog posts...</p>
-                        </div>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
-    // Handle error state
-    if (isError) {
-        return (
-            <>
-                <HeroSection title={title} description={description} />
-                <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-center justify-center min-h-[400px]">
-                        <div className="text-center">
-                            <p className="text-red-600 mb-4">Failed to load blog posts</p>
-                            <p className="text-muted-foreground">
-                                {error instanceof Error ? error.message : 'An unexpected error occurred'}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
-    // Handle empty state
-    if (filteredBlogs.length === 0) {
-        return (
-            <>
-                <HeroSection title={title} description={description} />
-                <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-center justify-center min-h-[400px]">
-                        <div className="text-center">
-                            <p className="text-muted-foreground">No blog posts found</p>
-                        </div>
-                    </div>
-                </div>
+                <Featured post={first} />
+                {rest.length > 0 && (
+                    <ul className="mt-20 grid gap-x-8 gap-y-14 border-t border-ink/15 pt-14 sm:grid-cols-2 lg:grid-cols-3">
+                        {rest.map((post) => <PostItem key={post.id} post={post} />)}
+                    </ul>
+                )}
             </>
         );
     }
 
     return (
         <>
-            <HeroSection title={title} description={description} />
-            <BlogContent
-                selectedCategory={selectedCategory}
-                blogs={filteredBlogs}
+            <PageHeader
+                title="Letters from home."
+                lead="News, achievements and everyday stories from Mountain Children's Home, written by the family."
             />
+            <section className="py-16 md:py-20">
+                <MaxWidthWrapper>{body}</MaxWidthWrapper>
+            </section>
         </>
     );
 }
+
 export default Blog;

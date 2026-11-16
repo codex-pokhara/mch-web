@@ -108,6 +108,7 @@ const appConfigs = compat.config({
         'import/order': 'off',
         'react/jsx-props-no-spreading': 'off',
         'import/prefer-default-export': 'off',
+        'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
 
     },
     overrides: [

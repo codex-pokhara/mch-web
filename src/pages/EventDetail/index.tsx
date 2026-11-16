@@ -1,257 +1,122 @@
+/* The event description is sanitized with DOMPurify before rendering. */
+/* eslint-disable react/no-danger */
 import {
     Link,
     useParams,
 } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {
-    ArrowLeft,
-    Calendar,
-    Clock,
-    MapPin,
-    Users,
-} from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import ReplyPanel from '@/components/ReplyPanel';
+import SafeImage from '@/components/SafeImage';
+import { ErrorNote } from '@/components/States';
+import { contact } from '@/constants';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { baseRequest } from '@/lib/base'; // Adjust import path as needed
+    getEvent,
+    queryKeys,
+} from '@/lib/api';
+import {
+    formatDateRange,
+    sanitizeHtml,
+} from '@/lib/format';
 
-interface Event {
-  id: number;
-  title: string;
-  slug: string;
-  cover_image: string;
-  description: string;
-  start_date: string;
-  end_date: string;
-  location: string;
-  event_type: string;
-  created_at: string;
-  updated_at: string;
+function BackLink() {
+    return (
+        <Link to="/event" className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-airmail-red [font-stretch:106%] hover:underline">
+            <ArrowLeft className="size-4" strokeWidth={1.75} />
+            All events
+        </Link>
+    );
 }
 
-// Event service for API calls
-const eventService = {
-    async getEvent(id: string): Promise<Event> {
-        const response = await baseRequest({
-            url: `/cms/events/${id}/`,
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch event: ${response.statusText}`);
-        }
-
-        return response.data;
-    },
-};
-
 function EventDetail() {
-    const { id } = useParams<{ id: string }>();
-
+    const { id = '' } = useParams();
     const {
         data: event,
-        isLoading,
+        isPending,
         isError,
         error,
+        refetch,
     } = useQuery({
-        queryKey: ['event', id],
-        queryFn: () => eventService.getEvent(id!),
+        queryKey: queryKeys.event(id),
+        queryFn: () => getEvent(id),
         enabled: !!id,
     });
+    usePageTitle(event?.title ?? 'Event');
 
-    const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
-
-    const getErrorMessage = () => {
-        if (isError) {
-            return error instanceof Error ? error.message : 'Failed to load event details';
-        }
-        return 'The event you\'re looking for doesn\'t exist.';
-    };
-
-    // Loading state
-    if (isLoading) {
+    if (isPending) {
         return (
-            <div className="min-h-screen bg-background">
-                {/* Hero Section Skeleton */}
-                <div className="relative h-96 bg-muted animate-pulse">
-                    <div className="absolute bottom-0 left-0 right-0 p-8">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="h-4 bg-muted-foreground/20 rounded w-32 mb-4" />
-                            <div className="flex flex-col md:flex-row md:items-end md:justify-between">
-                                <div>
-                                    <div className="h-12 bg-muted-foreground/20 rounded w-96 mb-4" />
-                                    <div className="h-6 bg-muted-foreground/20 rounded w-full max-w-2xl" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <MaxWidthWrapper className="py-16">
+                <div aria-busy="true">
+                    <span className="sr-only">Loading</span>
+                    <div className="skeleton h-4 w-32 rounded-[2px]" />
+                    <div className="skeleton mt-6 h-14 w-3/4 rounded-[2px]" />
+                    <div className="skeleton mt-10 aspect-[21/9] w-full rounded-[2px]" />
                 </div>
-
-                {/* Content Section Skeleton */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                        <div className="lg:col-span-2">
-                            <div className="h-6 bg-muted rounded w-24 mb-4" />
-                            <div className="h-8 bg-muted rounded w-64 mb-6" />
-                            <div className="space-y-3">
-                                <div className="h-4 bg-muted rounded w-full" />
-                                <div className="h-4 bg-muted rounded w-5/6" />
-                                <div className="h-4 bg-muted rounded w-4/5" />
-                            </div>
-                        </div>
-                        <div className="lg:col-span-1">
-                            <Card>
-                                <CardHeader>
-                                    <div className="h-6 bg-muted rounded w-32" />
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="h-12 bg-muted rounded" />
-                                    <div className="h-12 bg-muted rounded" />
-                                    <div className="h-12 bg-muted rounded" />
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </MaxWidthWrapper>
         );
     }
 
-    // Error state
-    if (isError || !event) {
+    if (isError) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold text-foreground mb-4">
-                        {isError ? 'Error Loading Event' : 'Event Not Found'}
-                    </h1>
-                    <p className="text-muted-foreground mb-6">
-                        {getErrorMessage()}
-                    </p>
-                    <Link to="/event">
-                        <Button>
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back to Events
-                        </Button>
-                    </Link>
-                </div>
-            </div>
+            <MaxWidthWrapper className="py-20">
+                <BackLink />
+                <ErrorNote className="mt-8" message={error.message} onRetry={() => refetch()} />
+            </MaxWidthWrapper>
         );
     }
+
+    const facts = [
+        { label: 'When', value: formatDateRange(event.start_date, event.end_date) },
+        { label: 'Where', value: event.location },
+        { label: 'Type', value: event.event_type },
+        { label: 'Organiser', value: 'Mountain Children’s Home' },
+    ].filter((fact) => fact.value);
 
     return (
-        <div className="min-h-screen bg-background">
-            {/* Hero Section */}
-            <div className="relative h-96 bg-gradient-to-r from-primary/20 to-secondary/20">
-                <img
-                    src={event.cover_image}
-                    alt={event.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-4.0.3&w=800&h=600&fit=crop';
-                    }}
-                />
-                <div className="absolute inset-0 bg-black/40" />
-
-                <div className="absolute bottom-0 left-0 right-0 p-8">
-                    <div className="max-w-7xl mx-auto">
-                        <Link to="/event" className="inline-flex items-center text-white mb-4 hover:text-white/80 transition-colors">
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back to Events
-                        </Link>
-
-                        <div className="flex flex-col md:flex-row md:items-end md:justify-between">
-                            <div>
-                                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                                    {event.title}
-                                </h1>
-                            </div>
-
-                            <div className="mt-6 md:mt-0 flex flex-col sm:flex-row gap-4">
-                                <div className="flex items-center text-white">
-                                    <Users className="w-5 h-5 mr-2" />
-                                    <span>Join our community</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Content Section */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    {/* Main Content */}
-                    <div className="lg:col-span-2">
-                        <div className="mb-8">
-                            <Badge className="bg-primary text-primary-foreground mb-4">
-                                {event.event_type}
-                            </Badge>
-                            <h2 className="text-2xl font-bold text-foreground mb-6">About This Event</h2>
-                            <div
-                                className="prose prose-lg max-w-none text-muted-foreground"
-                                // eslint-disable-next-line react/no-danger
-                                dangerouslySetInnerHTML={{ __html: event.description }}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Event Details Sidebar */}
-                    <div className="lg:col-span-1">
-                        <Card className="sticky top-8">
-                            <CardHeader>
-                                <CardTitle>Event Details</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-start space-x-3">
-                                    <Calendar className="w-5 h-5 text-primary mt-0.5" />
-                                    <div>
-                                        <p className="font-medium text-foreground">Start Date</p>
-                                        <p className="text-sm text-muted-foreground">{formatDate(event.start_date)}</p>
+        <>
+            <article className="pt-10 pb-16 md:pt-14">
+                <MaxWidthWrapper>
+                    <BackLink />
+                    <h1 className="mt-8 max-w-4xl text-4xl leading-[1.05] text-ink sm:text-5xl lg:text-6xl">{event.title}</h1>
+                    {event.cover_image && (
+                        <SafeImage
+                            src={event.cover_image}
+                            alt=""
+                            className="mt-12 aspect-[21/9] w-full rounded-[2px] object-cover"
+                            decoding="async"
+                        />
+                    )}
+                    <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_20rem] lg:gap-20">
+                        <div
+                            className="letter-prose"
+                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.description) }}
+                        />
+                        <aside className="lg:sticky lg:top-28 lg:self-start">
+                            <dl className="border-t-2 border-ink">
+                                {facts.map((fact) => (
+                                    <div key={fact.label} className="border-b border-ink/15 py-4">
+                                        <dt className="postal text-ink-faint">{fact.label}</dt>
+                                        <dd className="mt-1 text-ink">{fact.value}</dd>
                                     </div>
+                                ))}
+                                <div className="py-4">
+                                    <dt className="postal text-ink-faint">Questions</dt>
+                                    <dd className="mt-1">
+                                        <a className="break-all text-ink underline decoration-ink/30 hover:decoration-ink" href={`mailto:${contact.email}`}>
+                                            {contact.email}
+                                        </a>
+                                    </dd>
                                 </div>
-
-                                {event.start_date !== event.end_date && (
-                                    <div className="flex items-start space-x-3">
-                                        <Clock className="w-5 h-5 text-primary mt-0.5" />
-                                        <div>
-                                            <p className="font-medium text-foreground">End Date</p>
-                                            <p className="text-sm text-muted-foreground">{formatDate(event.end_date)}</p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="flex items-start space-x-3">
-                                    <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                                    <div>
-                                        <p className="font-medium text-foreground">Location</p>
-                                        <p className="text-sm text-muted-foreground">{event.location}</p>
-                                    </div>
-                                </div>
-
-                                <div className="pt-4 border-t">
-                                    <h4 className="font-medium text-foreground mb-2">Organizer</h4>
-                                    <p className="text-sm text-muted-foreground">Mountain Children Home</p>
-                                    <p className="text-sm text-muted-foreground">orphanhomedadagoun@gmail.com</p>
-                                </div>
-
-                            </CardContent>
-                        </Card>
+                            </dl>
+                        </aside>
                     </div>
-                </div>
-            </div>
-        </div>
+                </MaxWidthWrapper>
+            </article>
+            <ReplyPanel title="Cannot make it in person?" />
+        </>
     );
 }
 

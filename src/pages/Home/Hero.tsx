@@ -1,96 +1,94 @@
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-import image1 from '@/assets/1.jpg';
+import childrenAtHome from '@/assets/children-at-home.jpg';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import FrankedFigures from '@/components/Postal/FrankedFigures';
+import Postmark from '@/components/Postal/Postmark';
+import Stamp from '@/components/Postal/Stamp';
+import { Button } from '@/components/ui/button';
+import { MONTHLY_COST_USD } from '@/constants';
 
-function ImpactCounter() {
-    const stats = [
-        { value: '23', label: 'Years' },
-        { value: '200+', label: 'Children Served' },
-        { value: '40', label: 'Currently in Care' },
-        { value: '100%', label: 'Graduation Rate' },
-    ];
-
+function AirmailLabel() {
     return (
-        <div className="bg-black/20 backdrop-blur-md">
-            <MaxWidthWrapper>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-8">
-                    {stats.map((stat) => (
-                        <div key={stat.label} className="text-center">
-                            <div className="text-4xl md:text-5xl font-extrabold text-white mb-1">
-                                {stat.value}
-                            </div>
-                            <div className="text-sm text-white/70 font-medium uppercase tracking-wide">
-                                {stat.label}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </MaxWidthWrapper>
-        </div>
+        <span className="inline-flex flex-col whitespace-nowrap rounded-[2px] bg-airmail-navy px-3 py-1.5 text-sheet">
+            <span className="postal text-[0.625rem]">By air mail</span>
+            <span className="postal text-[0.625rem] text-sheet/70">Par avion</span>
+        </span>
     );
 }
 
-function HeroSection() {
+function Hero() {
     return (
-        <section className="relative">
-            <div
-                className="relative min-h-[85vh] flex flex-col"
-                style={{
-                    backgroundImage: `url(${image1})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}
-            >
-                <div className="absolute inset-0 bg-linear-to-b from-black/60 via-primary/50 to-primary/80" />
-                <div className="absolute inset-0 bg-linear-to-r from-black/30 via-transparent to-transparent" />
+        <section aria-labelledby="hero-title" className="pt-6 sm:pt-10">
+            <MaxWidthWrapper>
+                <div className="airmail-frame bg-sheet">
+                    <div className="grid gap-12 p-6 sm:p-10 lg:grid-cols-12 lg:gap-10 lg:p-14">
+                        <div className="rise-in min-w-0 lg:col-span-7">
+                            <div className="flex items-start justify-between gap-4">
+                                <AirmailLabel />
+                                <p className="postal hidden text-right text-ink-faint sm:block">
+                                    Budhanilkantha, Dadagaun
+                                    <span className="block">Kathmandu, Nepal</span>
+                                </p>
+                            </div>
 
-                <div className="relative flex-1 flex items-center">
-                    <MaxWidthWrapper>
-                        <div className="max-w-3xl py-16">
-                            <p className="text-accent text-xs font-semibold uppercase tracking-[0.25em] mb-6">
-                                OHCDS Mountain Children&apos;s Home
-                            </p>
-                            <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mb-8 leading-[1.05] tracking-tight">
-                                Building Futures,
-                                <br />
-                                One Child at a Time
+                            <p className="mt-10 font-serif text-2xl italic text-ink-soft sm:text-3xl">Dear friend,</p>
+                            <h1 id="hero-title" className="mt-3 text-[2.6rem] leading-[1.02] text-ink sm:text-6xl xl:text-7xl">
+                                Forty children here call us Mummy and Daddy.
                             </h1>
-                            <p className="text-lg sm:text-xl text-white/85 mb-4 leading-relaxed max-w-2xl
-                                font-light italic"
-                            >
-                                &ldquo;I know what it means to be hungry.
-                                I know what it means to have no one.
-                                That is why every child who comes
-                                to me... they become mine.&rdquo;
+                            <p className="mt-7 max-w-[52ch] text-lg leading-relaxed text-ink-soft sm:text-xl">
+                                In 2002 Ramesh, orphaned at seven, rented four small rooms and took
+                                in his first child.
+                                More than 200 children later, this is still a home, not an
+                                institution.
                             </p>
-                            <p className="text-sm text-white/60 mb-10">
-                                &mdash; Ramesh Dev Sunar, Founder
+                            <p className="mt-6 font-serif text-lg italic text-ink">
+                                With love, Ramesh and Gita
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Link
-                                    to="/our-family"
-                                    className="border-2 border-white/50 text-white hover:bg-white hover:text-primary px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 text-center"
-                                >
-                                    Meet Our Family
-                                </Link>
-                                <Link
-                                    to="/get-involved"
-                                    className="bg-accent text-white hover:bg-accent/85 px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                                >
-                                    <Heart className="h-4 w-4" />
-                                    Donate Now
-                                </Link>
+
+                            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                                <Button asChild variant="stamp" size="lg" className="h-auto min-h-13 py-3 whitespace-normal text-center">
+                                    <Link to="/get-involved">
+                                        Sponsor a child for $
+                                        {MONTHLY_COST_USD}
+                                        {' '}
+                                        a month
+                                        <ArrowRight strokeWidth={1.75} />
+                                    </Link>
+                                </Button>
+                                <Button asChild variant="outline" size="lg">
+                                    <Link to="/our-family">Read our story</Link>
+                                </Button>
                             </div>
                         </div>
-                    </MaxWidthWrapper>
+
+                        <div className="relative mt-12 min-w-0 self-center sm:mt-6 lg:col-span-5 lg:mt-0">
+                            <Stamp
+                                src={childrenAtHome}
+                                alt="The children and carers of OHCDS outside the home in Budhanilkantha, waving at the camera"
+                                country="Nepal · Dadagaun"
+                                denomination={`$${MONTHLY_COST_USD}`}
+                                caption="One child, one month of care"
+                                imgClassName="aspect-[3/2] object-[50%_28%]"
+                                className="mx-auto max-w-md rotate-[1.5deg] lg:max-w-none"
+                                priority
+                            />
+                            <Postmark
+                                ringTop="DADAGAUN · KATHMANDU"
+                                small="EST."
+                                big="2002"
+                                waves
+                                className="postmark-strike pointer-events-none absolute -top-[4.5rem] -left-1 w-52 mix-blend-multiply sm:-top-14 sm:-left-20 sm:w-72"
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <ImpactCounter />
-            </div>
+                <FrankedFigures className="mt-14" />
+            </MaxWidthWrapper>
         </section>
     );
 }
 
-export default HeroSection;
+export default Hero;

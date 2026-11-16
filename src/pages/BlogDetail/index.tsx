@@ -1,3 +1,4 @@
+/* The post body is sanitized with DOMPurify before rendering. */
 /* eslint-disable react/no-danger */
 import {
     Link,
@@ -5,306 +6,176 @@ import {
 } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-    Book,
-    Calendar,
-    Users,
+    ArrowLeft,
+    Facebook,
+    Link2,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
-import { baseRequest } from '@/lib/base';
+import ReplyPanel from '@/components/ReplyPanel';
+import SafeImage from '@/components/SafeImage';
+import { ErrorNote } from '@/components/States';
+import { Button } from '@/components/ui/button';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import {
+    getBlogPost,
+    getBlogPosts,
+    queryKeys,
+} from '@/lib/api';
+import {
+    formatDate,
+    postDate,
+    postPath,
+    sanitizeHtml,
+} from '@/lib/format';
 
-// Types
-export interface Tag {
-    id: number;
-    name: string;
-    slug: string;
+async function copyLink() {
+    try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success('Link copied');
+    } catch {
+        toast.error('Could not copy the link. Copy it from the address bar instead.');
+    }
 }
 
-export interface BlogPost {
-    id: number;
-    title: string;
-    slug: string;
-    cover_image: string;
-    content: string;
-    author_name: string;
-    tags: Tag[];
-    reading_time: number;
-    published_at: string;
-    status: string;
-    created_at: string;
-    updated_at: string;
+function BackLink() {
+    return (
+        <Link to="/blog" className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-airmail-red [font-stretch:106%] hover:underline">
+            <ArrowLeft className="size-4" strokeWidth={1.75} />
+            All letters
+        </Link>
+    );
 }
 
-export interface BlogAPIResponse {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: BlogPost[];
+function ArticleSkeleton() {
+    return (
+        <div className="mx-auto max-w-3xl py-16" aria-busy="true">
+            <span className="sr-only">Loading</span>
+            <div className="skeleton h-4 w-40 rounded-[2px]" />
+            <div className="skeleton mt-6 h-12 w-full rounded-[2px]" />
+            <div className="skeleton mt-3 h-12 w-2/3 rounded-[2px]" />
+            <div className="skeleton mt-10 aspect-[3/2] w-full rounded-[2px]" />
+        </div>
+    );
 }
-
-// API service
-const blogService = {
-    async getPosts(): Promise<BlogAPIResponse> {
-        const response = await baseRequest({
-            url: '/cms/blog-posts/',
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch blog posts: ${response.statusText}`);
-        }
-
-        return response.data;
-    },
-
-    async getPostById(id: string): Promise<BlogPost> {
-        const response = await baseRequest({
-            url: `/cms/blog-posts/${id}/`,
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch blog post: ${response.statusText}`);
-        }
-
-        return response.data;
-    },
-};
 
 function BlogDetail() {
-    const { id } = useParams();
-
-    // Fetch all blog posts for related articles
-    const {
-        data: blogResponse,
-        isLoading: isLoadingBlogs,
-        isError: isBlogsError,
-        error: blogsError,
-    } = useQuery({
-        queryKey: ['blogs'],
-        queryFn: blogService.getPosts,
+    const { id = '' } = useParams();
+    const post = useQuery({
+        queryKey: queryKeys.blogPost(id),
+        queryFn: () => getBlogPost(id),
+        enabled: !!id,
     });
+    const all = useQuery({ queryKey: queryKeys.blogPosts, queryFn: getBlogPosts });
+    usePageTitle(post.data?.title ?? 'Letter');
 
-    // Fetch specific blog post by id
-    const {
-        data: blog,
-        isLoading: isLoadingBlog,
-        isError: isBlogError,
-        error: blogError,
-    } = useQuery({
-        queryKey: ['blog', id],
-        queryFn: () => blogService.getPostById(id || ''),
-    });
+    if (post.isPending) {
+        return <MaxWidthWrapper><ArticleSkeleton /></MaxWidthWrapper>;
+    }
 
-    // Format date helper
-    const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
-
-    // Loading state
-    if (isLoadingBlog || isLoadingBlogs) {
+    if (post.isError) {
         return (
-            <MaxWidthWrapper>
-                <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
-                    <p className="text-muted-foreground">Loading blog post...</p>
-                </div>
+            <MaxWidthWrapper className="py-20">
+                <BackLink />
+                <ErrorNote className="mt-8" message={post.error.message} onRetry={() => post.refetch()} />
             </MaxWidthWrapper>
         );
     }
 
-    // Error state
-    if (isBlogError || isBlogsError) {
-        return (
-            <MaxWidthWrapper>
-                <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-                    <h1 className="text-2xl font-bold text-foreground mb-4">
-                        {blogError?.message || blogsError?.message || 'Something went wrong'}
-                    </h1>
-                    <Link to="/blog" className="text-blue-600 hover:text-blue-700">
-                        ← Back to Blog
-                    </Link>
-                </div>
-            </MaxWidthWrapper>
-        );
-    }
-
-    // Blog not found
-    if (!blog) {
-        return (
-            <MaxWidthWrapper>
-                <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-                    <h1 className="text-2xl font-bold text-foreground mb-4">Blog post not found</h1>
-                    <Link to="/blog" className="text-blue-600 hover:text-blue-700">
-                        ← Back to Blog
-                    </Link>
-                </div>
-            </MaxWidthWrapper>
-        );
-    }
-
-    // Get related blogs (exclude current blog)
-    const relatedBlogs = blogResponse?.results
-        ?.filter((b) => b.id !== blog.id)
-        ?.slice(0, 3) || [];
-
-    // Get primary category from tags
-    const primaryTag = blog.tags?.[0];
+    const blog = post.data;
+    const related = (all.data?.results ?? []).filter((item) => item.id !== blog.id).slice(0, 3);
+    const shareUrl = encodeURIComponent(window.location.href);
 
     return (
-        <MaxWidthWrapper>
-            <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                {/* Breadcrumb */}
-                <nav className="mb-8">
-                    <Link to="/blog" className="text-primary hover:text-blue-700 font-medium">
-                        ← Back to Blog
-                    </Link>
-                </nav>
-
-                {/* Article Header */}
-                <header className="mb-8">
-                    <div className="flex items-center text-sm text-muted-foreground mb-4">
-                        {primaryTag && (
-                            <span className="bg-primary text-white px-3 py-1 rounded-full mr-4">
-                                {primaryTag.name}
-                            </span>
-                        )}
-                        <Calendar className="h-4 w-4 mr-2" />
-                        {formatDate(blog.published_at)}
-                        <span className="mx-2">•</span>
-                        <Book className="h-4 w-4 mr-2" />
-                        {blog.reading_time}
-                        {' '}
-                        min read
-                    </div>
-
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-                        {blog.title}
-                    </h1>
-
-                    <div className="flex items-center mb-8">
-                        <div className="flex items-center">
-                            <Users className="h-5 w-5 mr-2 text-muted-foreground/70" />
-                            <span className="text-muted-foreground font-medium">
-                                By
+        <>
+            <article className="pt-10 pb-16 md:pt-14">
+                <MaxWidthWrapper>
+                    <div className="mx-auto max-w-3xl">
+                        <BackLink />
+                        <p className="postal mt-10 flex flex-wrap gap-x-3 gap-y-1 text-ink-faint">
+                            <time dateTime={postDate(blog)}>
+                                {formatDate(postDate(blog))}
+                            </time>
+                            {blog.reading_time > 0 && (
+                                <span>
+                                    {blog.reading_time}
+                                    {' '}
+                                    min read
+                                </span>
+                            )}
+                        </p>
+                        <h1 className="mt-4 text-4xl leading-[1.05] text-ink sm:text-5xl lg:text-6xl">{blog.title}</h1>
+                        {blog.author_name && (
+                            <p className="mt-5 font-serif text-lg italic text-ink-soft">
+                                From
                                 {' '}
                                 {blog.author_name}
-                            </span>
+                            </p>
+                        )}
+                    </div>
+                    {blog.cover_image && (
+                        <SafeImage
+                            src={blog.cover_image}
+                            alt=""
+                            className="mx-auto mt-12 aspect-[16/9] w-full max-w-5xl rounded-[2px] object-cover"
+                            decoding="async"
+                        />
+                    )}
+                    <div className="mx-auto mt-12 max-w-3xl">
+                        <div className="letter-prose" dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.content) }} />
+
+                        {blog.tags?.length > 0 && (
+                            <ul className="mt-12 flex flex-wrap gap-2" aria-label="Tags">
+                                {blog.tags.map((tag) => (
+                                    <li key={tag.id} className="rounded-[2px] border border-ink/20 px-2.5 py-1 font-sans text-sm text-ink-soft">
+                                        {tag.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+
+                        <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-ink/15 pt-6">
+                            <p className="mr-2 font-sans text-sm font-semibold text-ink">Share this letter</p>
+                            <Button variant="outline" size="sm" onClick={copyLink}>
+                                <Link2 strokeWidth={1.75} />
+                                Copy link
+                            </Button>
+                            <Button asChild variant="outline" size="sm">
+                                <a href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`} target="_blank" rel="noopener noreferrer">
+                                    <Facebook strokeWidth={1.75} />
+                                    Facebook
+                                </a>
+                            </Button>
                         </div>
                     </div>
-
-                    <img
-                        src={blog.cover_image}
-                        alt={blog.title}
-                        className="w-full h-64 md:h-96 object-cover rounded-2xl shadow-lg"
-                    />
-                </header>
-
-                {/* Article Content */}
-                <div className="prose prose-lg max-w-none mb-12">
-                    <div
-                        dangerouslySetInnerHTML={{ __html: blog.content }}
-                        className="text-foreground/80 leading-relaxed space-y-6"
-                    />
-                </div>
-
-                {/* Tags */}
-                {blog.tags && blog.tags.length > 0 && (
-                    <div className="mb-8">
-                        <h3 className="text-lg font-semibold text-foreground mb-4">Tags</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {blog.tags.map((tag) => (
-                                <span
-                                    key={tag.id}
-                                    className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium hover:bg-primary/20 transition-colors"
-                                >
-                                    {tag.name}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Social Sharing */}
-                <div className="border-t border-border pt-8 mb-12">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Share this story</h3>
-                    <div className="flex space-x-4">
-                        <button
-                            type="button"
-                            onClick={() => {
-                                const url = window.location.href;
-                                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-                            }}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition-colors"
-                        >
-                            Share on Facebook
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                const url = window.location.href;
-                                const text = `Check out this story: ${blog.title}`;
-                                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
-                            }}
-                            className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded font-medium transition-colors"
-                        >
-                            Share on Twitter
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                navigator.clipboard.writeText(window.location.href);
-                            // You might want to show a toast notification here
-                            }}
-                            className="bg-muted-foreground hover:bg-muted-foreground/90 text-white px-4 py-2 rounded font-medium transition-colors"
-                        >
-                            Copy Link
-                        </button>
-                    </div>
-                </div>
-
-                {/* Related Articles */}
-                {relatedBlogs.length > 0 && (
-                    <section className="border-t border-border pt-12">
-                        <h3 className="text-2xl font-bold text-foreground mb-8">Related Stories</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {relatedBlogs.map((relatedBlog) => (
-                                <Link
-                                    key={relatedBlog.id}
-                                    to={`/blog/${relatedBlog.id}`}
-                                    className="group h-full"
-                                >
-                                    <article className="bg-card rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-                                        <div className="overflow-hidden">
-                                            <img
-                                                src={relatedBlog.cover_image}
-                                                alt={relatedBlog.title}
-                                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                        </div>
-                                        <div className="p-4 flex flex-col flex-1">
-                                            <div className="flex items-center text-xs text-muted-foreground mb-2">
-                                                <Calendar className="h-3 w-3 mr-1" />
-                                                {formatDate(relatedBlog.published_at)}
-                                            </div>
-                                            <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                                                {relatedBlog.title}
-                                            </h4>
-                                            <p className="text-muted-foreground text-sm line-clamp-2 mt-auto">
-                                                {relatedBlog.content.replace(/<[^>]*>/g, '').substring(0, 100)}
-                                                ...
-                                            </p>
-                                        </div>
-                                    </article>
-                                </Link>
-                            ))}
-                        </div>
-                    </section>
-                )}
+                </MaxWidthWrapper>
             </article>
-        </MaxWidthWrapper>
+
+            {related.length > 0 && (
+                <section aria-labelledby="more-title" className="border-t border-ink/15 py-16 md:py-20">
+                    <MaxWidthWrapper>
+                        <h2 id="more-title" className="text-3xl text-ink">More letters</h2>
+                        <ul className="mt-10 grid gap-8 md:grid-cols-3">
+                            {related.map((item) => (
+                                <li key={item.id}>
+                                    <Link to={postPath(item)} className="group block">
+                                        <time dateTime={postDate(item)} className="postal text-ink-faint">
+                                            {formatDate(postDate(item), 'short')}
+                                        </time>
+                                        <span className="mt-2 block font-sans text-xl font-semibold text-ink [font-stretch:106%] group-hover:underline">
+                                            {item.title}
+                                        </span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </MaxWidthWrapper>
+                </section>
+            )}
+
+            <ReplyPanel />
+        </>
     );
 }
 

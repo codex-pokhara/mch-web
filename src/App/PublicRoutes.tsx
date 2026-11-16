@@ -6,9 +6,13 @@ import {
 
 import AuthContext from '@/contexts/auth';
 
+/** Routes only for signed-out visitors, such as the sign-in page. */
 function PublicRoutes() {
-    const auth = useContext(AuthContext);
-    return !auth.state ? <Outlet /> : <Navigate to="/account" />;
+    const { state, status } = useContext(AuthContext);
+    if (status === 'checking') {
+        return null;
+    }
+    return state ? <Navigate to="/account" replace /> : <Outlet />;
 }
 
 export default PublicRoutes;

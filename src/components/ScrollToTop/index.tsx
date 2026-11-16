@@ -1,10 +1,20 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
+/** Scroll to the top on page change, or to the #anchor when one is given. */
 export default function ScrollToTop() {
-    const { pathname } = useLocation();
+    const { pathname, hash } = useLocation();
+
     useEffect(() => {
+        if (hash) {
+            const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+            if (target) {
+                target.scrollIntoView();
+                return;
+            }
+        }
         window.scrollTo(0, 0);
-    }, [pathname]);
+    }, [pathname, hash]);
+
     return null;
 }

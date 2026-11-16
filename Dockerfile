@@ -30,4 +30,5 @@ RUN pnpm run build
 EXPOSE $PORT
 
 # Command to serve the build folder
-CMD ["serve", "-s", "dist", "-l", "$PORT"]
+# Shell form so $PORT expands; the exec form would pass the literal string "$PORT".
+CMD serve -s dist -l ${PORT:-3000}

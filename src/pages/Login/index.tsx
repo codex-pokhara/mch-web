@@ -1,188 +1,123 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type React from 'react';
 import {
-    useCallback,
     useContext,
     useState,
 } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import {
-    EyeIcon,
-    EyeOffIcon,
+    Eye,
+    EyeOff,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { baseRequest } from '@/lib/base';
-import { cn } from '@/lib/utils';
+import { setLocalStorage } from '@/lib/utils';
 
-interface LoginResponse {
-  ok: boolean,
-  data: {
-    token: string,
-    refresh: string,
-    detail?: string,
-    user: {
-      id: string;
-      username: string;
-      email: string;
-    };
-  };
-  message?: string;
+const loginSchema = z.object({
+    email_or_username: z.string().trim().min(1, 'Enter your email or username.'),
+    password: z.string().min(1, 'Enter your password.'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
+interface LoginPayload {
+    token: string;
+    refresh: string;
+    detail?: string;
+    user: { id: string; username: string };
 }
-interface ApiError {
-  message: string;
-}
-const login = async (body: any) => {
+
+async function login(body: LoginFormData) {
     const response = await baseRequest({
         url: '/login',
         method: 'POST',
-        body: JSON.stringify(body),
+        body,
         contentType: 'application/json',
     });
+    const data = response.data as LoginPayload;
+    if (!response.ok) {
+        throw new Error(data?.detail || 'That email and password did not match.');
+    }
+    return data;
+}
 
-    return response;
-};
-const loginSchema = z.object({
-    email_or_username: z.string().min(1, 'Invalid email address'),
-    password: z.string().min(1, 'Password must be at least 6 characters'),
-});
+const inputClass = 'h-11 w-full rounded-[3px] border border-ink/25 bg-sheet px-3 text-ink focus:border-airmail-navy focus:outline-none aria-[invalid=true]:border-airmail-red';
 
-type LoginFormData = z.infer<typeof loginSchema>
-
-export default function Login({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export default function Login() {
+    usePageTitle('Staff sign in');
     const [isVisible, setIsVisible] = useState(false);
     const { login: userLogin } = useContext(AuthContext);
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginFormData>({
-        resolver: zodResolver(loginSchema),
-    });
+    } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
 
-    const togglePasswordVisibility = useCallback(() => {
-        setIsVisible((prev) => !prev);
-    }, []);
-
-    const loginMutation = useMutation<LoginResponse, ApiError, LoginFormData>({
+    const mutation = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
-            if (data?.ok) {
-                userLogin(data.data.token, {
-                    id: data.data.user.id,
-                    name: data.data.user.username,
-                });
-                localStorage.setItem('refresh-token', data.data.refresh);
-                toast.success(data.message || 'Login successful');
-            } else {
-                toast.error(data.data.detail || 'Login failed');
-            }
+            setLocalStorage('refresh-token', data.refresh);
+            userLogin(data.token, { id: data.user.id, name: data.user.username });
+            toast.success('Signed in');
         },
-        onError: (error) => {
-            toast.error(error.message || 'An error occurred during login');
-        },
+        onError: (error) => toast.error(error.message),
     });
 
-    const onSubmit = (formData: LoginFormData) => {
-        loginMutation.mutate(formData);
-    };
-
     return (
-        <div className="flex justify-center items-center pb-24 pt-[160px]">
-            <div className={cn('flex flex-col gap-6 w-full max-w-sm justify-center ', className)} {...props}>
-                <Card>
-                    <CardHeader className="text-center">
-                        <CardTitle className="text-xl">Welcome back</CardTitle>
-                        <CardDescription>Login with your Google account</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="grid gap-6">
-                                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                                    <span className="relative z-10 bg-background px-2 text-muted-foreground">Or continue with</span>
-                                </div>
-                                <div className="grid gap-6">
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="email">Email</Label>
-                                        <Input
-                                            id="email"
-                                            type="text"
-                                            placeholder="m@example.com"
-                                            {...register('email_or_username')}
-                                            className={cn({
-                                                'focus-visible:ring-red-500': errors.email_or_username,
-                                            })}
-                                        />
-                                        {errors.email_or_username && <span className="text-sm text-red-500">{errors.email_or_username.message}</span>}
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <div className="flex items-center">
-                                            <Label htmlFor="password">Password</Label>
-                                            <Link to="/forgot-password" className="ml-auto text-sm underline-offset-4 hover:underline">
-                                                Forgot your password?
-                                            </Link>
-                                        </div>
-                                        <div className="relative">
-                                            <Input
-                                                id="password"
-                                                type={isVisible ? 'text' : 'password'}
-                                                {...register('password')}
-                                                className={cn({
-                                                    'focus-visible:ring-red-500': errors.password,
-                                                })}
-                                            />
-                                            <button
-                                                type="button"
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:text-muted-foreground focus:outline-none"
-                                                onClick={togglePasswordVisibility}
-                                                aria-label={isVisible ? 'Hide password' : 'Show password'}
-                                            >
-                                                {isVisible ? <EyeIcon className="h-4 w-4" /> : <EyeOffIcon className="h-4 w-4" />}
-                                            </button>
-                                        </div>
-                                        {errors.password && <span className="text-sm text-red-500">{errors.password.message}</span>}
-                                    </div>
-                                    <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
-                                        {loginMutation.isPending ? 'Logging in...' : 'Login'}
-                                    </Button>
-                                </div>
-                                <div className="text-center text-sm">
-                                    Don&apos;t have an account?
-                                    {' '}
-                                    <Link to="/sign-up" className="underline underline-offset-4">
-                                        Sign up
-                                    </Link>
-                                </div>
-                            </div>
-                        </form>
-                    </CardContent>
-                </Card>
-                <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-                    By clicking continue, you agree to our
-                    {' '}
-                    <Link to="/terms-of-service">Terms of Service</Link>
-                    {' '}
-                    and
-                    {' '}
-                    <Link to="/privacy-policy">Privacy Policy</Link>
-                    .
-                </div>
+        <MaxWidthWrapper className="flex justify-center py-20 md:py-28">
+            <div className="w-full max-w-sm">
+                <h1 className="text-4xl text-ink">Staff sign in.</h1>
+                <p className="mt-3 text-ink-soft">For the OHCDS team only.</p>
+                <form onSubmit={handleSubmit((values) => mutation.mutate(values))} noValidate className="mt-10 flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="login-user" className="postal text-ink-soft">Email or username</label>
+                        <input
+                            id="login-user"
+                            type="text"
+                            autoComplete="username"
+                            aria-invalid={!!errors.email_or_username}
+                            aria-describedby={errors.email_or_username ? 'login-user-error' : undefined}
+                            className={inputClass}
+                            {...register('email_or_username')}
+                        />
+                        {errors.email_or_username && (
+                            <p id="login-user-error" className="text-sm text-airmail-red">{errors.email_or_username.message}</p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="login-password" className="postal text-ink-soft">Password</label>
+                        <div className="relative">
+                            <input
+                                id="login-password"
+                                type={isVisible ? 'text' : 'password'}
+                                autoComplete="current-password"
+                                aria-invalid={!!errors.password}
+                                aria-describedby={errors.password ? 'login-password-error' : undefined}
+                                className={`${inputClass} pr-11`}
+                                {...register('password')}
+                            />
+                            <button
+                                type="button"
+                                className="absolute top-1/2 right-1 flex size-9 -translate-y-1/2 items-center justify-center rounded-[3px] text-ink-soft hover:text-ink"
+                                onClick={() => setIsVisible((visible) => !visible)}
+                                aria-label={isVisible ? 'Hide password' : 'Show password'}
+                            >
+                                {isVisible ? <EyeOff className="size-4" strokeWidth={1.75} /> : <Eye className="size-4" strokeWidth={1.75} />}
+                            </button>
+                        </div>
+                        {errors.password && <p id="login-password-error" className="text-sm text-airmail-red">{errors.password.message}</p>}
+                    </div>
+                    <Button type="submit" variant="ink" className="w-full" disabled={mutation.isPending}>
+                        {mutation.isPending ? 'Signing in…' : 'Sign in'}
+                    </Button>
+                </form>
             </div>
-        </div>
+        </MaxWidthWrapper>
     );
 }

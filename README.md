@@ -1,113 +1,46 @@
-# React Frontend Boilerplate
+# Mountain Children's Home website
 
-A production-ready React boilerplate with authentication, routing, API utilities, and responsive layout components.
+Public website for OHCDS Mountain Children's Home, a family home for 40 children in Budhanilkantha, Dadagaun, Kathmandu.
 
-## Features
+Built with React 19, Vite, Tailwind CSS v4, TanStack Query, react-hook-form and zod. Content (letters, events, albums, photos) and contact messages come from the OHCDS CMS API.
 
-- 🛠️ **Modern Tooling**: Built with Vite + React + TypeScript
-- 🔐 **Authentication**: Context-based auth system with JWT support
-- 🚦 **Routing**: Protected & public routes with React Router
-- 📡 **API Client**: Axios-based request utility with interceptors
-- 🎨 **Styling**: TailwindCss and Shadcn UI
-- 🔄 **State Management**: React Query for server state & context api for client state
-- 🧹 **Code Quality**: ESLint for linting
-- ⚡ **Performance**: Code splitting, lazy loading, and top progress bar
+## Getting started
 
-## Installation
+Requires Node 20+ and pnpm 9.
 
-1. Clone the repository
-   ```bash
-   git clone https://github.com/your-username/react-boilerplate.git
-   cd react-boilerplate
-   ```
+```bash
+pnpm install
+echo "VITE_APP_SERVER_URL=https://mchapi.codex.com.np/api" > .env.local
+pnpm dev
+```
 
-2. Install dependencies using pnpm
-   ```bash
-   pnpm install
-   ```
+| Command | What it does |
+| --- | --- |
+| `pnpm dev` | Dev server with hot reload |
+| `pnpm build` | Typecheck, then production build to `dist/` |
+| `pnpm lint` | ESLint (Airbnb rules) |
+| `pnpm preview` | Serve the production build locally |
 
-3. Create a `.env` file based on `.env.example`
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Start the development server
-   ```bash
-   pnpm dev
-   ```
-
-## Project Structure
+## Where things live
 
 ```
 src/
-├── components/       # Reusable components
-├── contexts/         # React contexts
-├── hooks/            # Custom hooks
-├── lib/              # Utility functions
-├── pages/            # Page components├── styles/           # Global styles
-├── App/App.tsx           # Main app component
-└── main.tsx          # Entry point
+  App/           Router (pages are code-split), auth guards, route error page
+  components/    Layout, Navbar, Footer, PageHeader, ReplyPanel, States, ui/button
+    Postal/      The airmail world: Stamp, Postmark, FrankedFigures
+    Sections/    BudgetLedger and Credentials, shared by Home and Transparency
+  constants/     Navigation, contact details, approved figures and budget split
+  hooks/         useInView, usePageTitle
+  lib/           api.ts (typed CMS calls), format.ts (dates, excerpts, HTML sanitizing), base.ts (axios)
+  pages/         One folder per route
 ```
 
-## Key Implementation Details
+Figures, the budget split and contact details live in `src/constants`. Change them there and every page follows.
 
-### Authentication System
-- JWT token storage in localStorage
-- Auth context with login/logout methods
-- Protected route wrapper
-- Automatic profile fetching on app load
+## Design
 
-### API Client
-- Axios-based `baseRequest` utility
-- Automatic auth header injection
-- Error handling
-- AbortController support
+The visual system is documented in `DESIGN.md`, and product facts and approved claims are in `PRODUCT.md`. Read both before adding a page. Copy uses no em dashes.
 
-### Layout System
-- Responsive max-width wrapper
-- Persistent layout with header/footer
-- Scroll restoration
-- Loading indicators
+## Deploying
 
-## CI/CD Pipeline
-
-The GitHub Actions workflow (`.github/workflows/ci.yml`) includes:
-
-1. **Linting**: Runs ESLint on every push
-2. **Build**: Production build verification
-3. **Deployment**: (Configure your deployment steps)
-
-## Available Scripts
-
-- `pnpm dev`: Start development server
-- `pnpm build`: Create production build
-- `pnpm lint`: Run ESLint
-- `pnpm preview`: Preview production build locally
-
-## Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `VITE_APP_SERVER_URL` | Base API URL |
-
-## Contributing
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a pull request
-
-## License
-
-MIT
-
----
-
-### Additional Recommendations:
-
-1. Add a `CONTRIBUTING.md` for contribution guidelines
-2. Include a `CHANGELOG.md` for version history
-3. Add a `SECURITY.md` for vulnerability reporting
-4. Consider adding a code coverage badge if you implement tests
-5. Add visual examples (screenshots/GIFs) of key features
+`Dockerfile` builds the site and serves `dist/` with `serve` on `$PORT` (default 3000). CI in `.github/workflows/ci.yml` lints and builds on every push.

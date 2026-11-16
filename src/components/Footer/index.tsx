@@ -2,148 +2,113 @@ import { Link } from 'react-router-dom';
 import {
     Facebook,
     Instagram,
-    Mail,
 } from 'lucide-react';
 
 import MaxWidthWrapper from '../MaxWidthWrapper';
 
+import {
+    contact,
+    navigation,
+} from '@/constants';
+
+const helpLinks = [
+    { title: 'Donate', url: '/get-involved' },
+    { title: 'Volunteer', url: '/get-involved#ways' },
+    { title: 'Visit us', url: '/get-involved#ways' },
+    { title: 'Budget report (PDF)', url: '/MCH.pdf', external: true },
+];
+
+const linkClass = 'text-sheet/75 underline-offset-4 transition-colors duration-150 hover:text-sheet hover:underline';
+
 export default function Footer() {
+    const year = new Date().getFullYear();
     return (
-        <footer className="w-full bg-foreground text-white">
-            <MaxWidthWrapper className="py-20">
-                <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-                    <div className="flex flex-col gap-3">
-                        <Link to="/" className="flex items-center gap-3">
-                            <img
-                                className="h-14 w-auto brightness-0 invert"
-                                src="Vector.png"
-                                alt="OHCDS logo"
-                            />
-                        </Link>
-                        <p className="text-base font-semibold text-white">
-                            OHCDS Mountain Children&apos;s Home
-                        </p>
-                        <p className="text-sm text-white/40 leading-relaxed">
-                            Building Futures, One Child at a Time.
-                            <br />
-                            Budhanilkantha, Dadagaun, Kathmandu, Nepal.
-                        </p>
-                    </div>
-
-                    <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 mb-5">
-                            Quick Links
-                        </h3>
-                        <ul className="grid gap-3">
-                            <li>
-                                <Link to="/" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Home
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/our-family" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Our Family
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/impact" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Impact
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/transparency" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Transparency
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/gallery" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Gallery
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 mb-5">
-                            Get Involved
-                        </h3>
-                        <ul className="grid gap-3">
-                            <li>
-                                <Link to="/get-involved" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Donate
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/get-involved" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Volunteer
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/blog" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-                                    Blog
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 mb-5">
-                            Connect
-                        </h3>
-                        <div className="flex gap-3 mb-4">
-                            <Link
-                                to="https://www.facebook.com/mountain.children.home.2025/"
-                                className="w-10 h-10 rounded-full bg-white/10 text-white/60 hover:bg-accent hover:text-white flex items-center justify-center transition-all duration-200"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Facebook className="h-4 w-4" />
-                                <span className="sr-only">Facebook</span>
-                            </Link>
-                            <Link
-                                to="https://www.instagram.com/mountainchildren_home/"
-                                className="w-10 h-10 rounded-full bg-white/10 text-white/60 hover:bg-accent hover:text-white flex items-center justify-center transition-all duration-200"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Instagram className="h-4 w-4" />
-                                <span className="sr-only">Instagram</span>
-                            </Link>
-                            <a
-                                href="mailto:orphanhomedadagaun@gmail.com"
-                                className="w-10 h-10 rounded-full bg-white/10 text-white/60 hover:bg-accent hover:text-white flex items-center justify-center transition-all duration-200"
-                            >
-                                <Mail className="h-4 w-4" />
-                                <span className="sr-only">Email</span>
-                            </a>
-                        </div>
-                        <p className="text-xs text-white/30">
-                            orphanhomedadagaun@gmail.com
-                        </p>
-                    </div>
+        <footer className="bg-ink text-sheet">
+            <div className="airmail-stripes h-2" aria-hidden="true" />
+            <MaxWidthWrapper className="grid gap-12 pt-16 pb-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.35fr]">
+                <div>
+                    <Link to="/" className="inline-flex items-center gap-3">
+                        <img src="/logo.png" alt="" width={74} height={40} className="h-10 w-auto brightness-0 invert" />
+                        <span className="font-sans text-lg font-bold [font-stretch:112.5%]">Mountain Children&apos;s Home</span>
+                    </Link>
+                    <p className="mt-5 max-w-[34ch] text-sheet/75">
+                        A family home for forty children in Dadagaun, Kathmandu. Run by the Orphan
+                        and Helpless Children
+                        Development Society since 2002.
+                    </p>
                 </div>
 
-                <div className="mt-16 border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <p className="text-xs text-white/30">
-                        &copy;
-                        {' '}
-                        {new Date().getFullYear()}
-                        {' '}
-                        OHCDS Mountain Children&apos;s Home. All rights reserved.
+                <nav aria-label="Footer">
+                    <p className="postal text-sheet/55">The home</p>
+                    <ul className="mt-4 flex flex-col gap-2.5 font-sans text-[0.9375rem]">
+                        <li><Link className={linkClass} to="/">Home</Link></li>
+                        {navigation.map((item) => (
+                            <li key={item.url}>
+                                <Link className={linkClass} to={item.url}>{item.title}</Link>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+
+                <div>
+                    <p className="postal text-sheet/55">Help</p>
+                    <ul className="mt-4 flex flex-col gap-2.5 font-sans text-[0.9375rem]">
+                        {helpLinks.map((item) => (
+                            <li key={item.title}>
+                                {item.external
+                                    ? <a className={linkClass} href={item.url} target="_blank" rel="noopener noreferrer">{item.title}</a>
+                                    : <Link className={linkClass} to={item.url}>{item.title}</Link>}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <address className="not-italic">
+                    <p className="postal text-sheet/55">Write to us</p>
+                    <p className="mt-4 text-sheet/75">
+                        {contact.addressLines.map((line) => <span key={line} className="block">{line}</span>)}
                     </p>
-                    <p className="text-xs text-white/30">
-                        Powered by
-                        {' '}
+                    <p className="mt-3 flex flex-col gap-1 font-sans text-[0.9375rem]">
+                        <a className={`${linkClass} [overflow-wrap:anywhere]`} href={`mailto:${contact.email}`}>{contact.email}</a>
+                        <a className={`${linkClass} tabular`} href={contact.phoneHref}>{contact.phone}</a>
+                    </p>
+                    <div className="mt-5 flex gap-2">
                         <a
-                            href="https://codex.com.np"
+                            href={contact.facebook}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-white/50 hover:text-white transition-colors duration-200"
+                            className="press flex size-10 items-center justify-center rounded-[3px] border border-sheet/25 text-sheet/80 hover:border-sheet hover:text-sheet"
                         >
-                            Codex Pvt Ltd
+                            <Facebook className="size-4" strokeWidth={1.75} />
+                            <span className="sr-only">Facebook</span>
                         </a>
-                    </p>
-                </div>
+                        <a
+                            href={contact.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="press flex size-10 items-center justify-center rounded-[3px] border border-sheet/25 text-sheet/80 hover:border-sheet hover:text-sheet"
+                        >
+                            <Instagram className="size-4" strokeWidth={1.75} />
+                            <span className="sr-only">Instagram</span>
+                        </a>
+                    </div>
+                </address>
+            </MaxWidthWrapper>
+            <MaxWidthWrapper className="flex flex-col gap-2 border-t border-sheet/15 py-6 font-sans text-xs text-sheet/60 sm:flex-row sm:justify-between">
+                <p>
+                    ©
+                    {' '}
+                    {year}
+                    {' '}
+                    OHCDS Mountain Children&apos;s Home
+                </p>
+                <p>
+                    Site by
+                    {' '}
+                    <a className="underline-offset-4 hover:text-sheet hover:underline" href="https://codex.com.np" target="_blank" rel="noopener noreferrer">
+                        Codex
+                    </a>
+                </p>
             </MaxWidthWrapper>
         </footer>
     );

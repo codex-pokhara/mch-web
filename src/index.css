@@ -1,301 +1,285 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
+/*
+ * Airmail aerogramme world.
+ * Ground is thin airmail paper, the letter sheet is lighter, text is navy ink.
+ * Airmail red and navy only appear as the chevron border, stamps and the one
+ * primary action. Postmark violet is reserved for cancellation marks.
+ */
 :root {
-  --background: oklch(0.985 0.002 80);
-  --foreground: oklch(0.205 0.015 50);
-  --card: oklch(1.0 0 0);
-  --card-foreground: oklch(0.205 0.015 50);
-  --popover: oklch(1.0 0 0);
-  --popover-foreground: oklch(0.205 0.015 50);
-  --primary: oklch(0.38 0.07 165);
-  --primary-foreground: oklch(1.0 0 0);
-  --secondary: oklch(0.94 0.015 155);
-  --secondary-foreground: oklch(0.30 0.04 165);
-  --muted: oklch(0.96 0.008 80);
-  --muted-foreground: oklch(0.48 0.02 60);
-  --accent: oklch(0.65 0.18 25);
-  --accent-foreground: oklch(1.0 0 0);
-  --destructive: oklch(0.577 0.215 27);
-  --destructive-foreground: oklch(1.0 0 0);
-  --border: oklch(0.91 0.008 80);
-  --input: oklch(0.94 0.006 80);
-  --ring: oklch(0.38 0.07 165);
-  --chart-1: oklch(0.38 0.07 165);
-  --chart-2: oklch(0.65 0.18 25);
-  --chart-3: oklch(0.58 0.12 85);
-  --chart-4: oklch(0.50 0.10 290);
-  --chart-5: oklch(0.55 0.08 165);
-  --sidebar: oklch(0.975 0.005 155);
-  --sidebar-foreground: oklch(0.205 0.015 50);
-  --sidebar-primary: oklch(0.45 0.06 165);
-  --sidebar-primary-foreground: oklch(1.0 0 0);
-  --sidebar-accent: oklch(0.45 0.06 165);
-  --sidebar-accent-foreground: oklch(1.0 0 0);
-  --sidebar-border: oklch(0.91 0.008 80);
-  --sidebar-ring: oklch(0.45 0.06 165);
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: 'JetBrains Mono', Inconsolata, monospace;
-  --radius: 0.625rem;
-  --shadow-2xs: 0 1px 2px 0 oklch(0.2 0.01 60 / 0.04);
-  --shadow-xs: 0 1px 3px 0 oklch(0.2 0.01 60 / 0.06);
-  --shadow-sm: 0 2px 6px -1px oklch(0.2 0.01 60 / 0.07), 0 1px 2px -1px oklch(0.2 0.01 60 / 0.04);
-  --shadow: 0 4px 12px -2px oklch(0.2 0.01 60 / 0.08), 0 2px 4px -2px oklch(0.2 0.01 60 / 0.04);
-  --shadow-md: 0 6px 16px -3px oklch(0.2 0.01 60 / 0.10), 0 3px 6px -3px oklch(0.2 0.01 60 / 0.05);
-  --shadow-lg: 0 10px 24px -4px oklch(0.2 0.01 60 / 0.12), 0 4px 8px -4px oklch(0.2 0.01 60 / 0.04);
-  --shadow-xl: 0 16px 40px -6px oklch(0.2 0.01 60 / 0.14), 0 6px 12px -4px oklch(0.2 0.01 60 / 0.04);
-  --shadow-2xl: 0 24px 48px -8px oklch(0.2 0.01 60 / 0.20);
-  --tracking-normal: 0rem;
-  --spacing: 0.25rem;
-}
+  --paper: #e9eff4;
+  --paper-deep: #dbe4ec;
+  --sheet: #f7f9fb;
+  --ink: #16224a;
+  --ink-soft: #46527a;
+  --ink-faint: #6b7697;
+  --rule: #c5d2dd;
+  --airmail-red: #b8142b;
+  --airmail-red-deep: #96101f;
+  --airmail-navy: #1d2f6f;
+  --postmark: #5b4f86;
+  --brand-teal: #4a8f85;
 
-.dark {
-  --background: oklch(0.18 0.012 165);
-  --foreground: oklch(0.96 0.005 80);
-  --card: oklch(0.22 0.015 165);
-  --card-foreground: oklch(0.96 0.005 80);
-  --popover: oklch(0.22 0.015 165);
-  --popover-foreground: oklch(0.96 0.005 80);
-  --primary: oklch(0.55 0.08 165);
-  --primary-foreground: oklch(1.0 0 0);
-  --secondary: oklch(0.30 0.03 165);
-  --secondary-foreground: oklch(0.96 0.005 80);
-  --muted: oklch(0.26 0.015 165);
-  --muted-foreground: oklch(0.70 0.015 80);
-  --accent: oklch(0.65 0.18 25);
-  --accent-foreground: oklch(1.0 0 0);
-  --destructive: oklch(0.61 0.20 25);
-  --destructive-foreground: oklch(0.96 0.005 80);
-  --border: oklch(0.32 0.02 165);
-  --input: oklch(0.32 0.02 165);
-  --ring: oklch(0.55 0.08 165);
-  --chart-1: oklch(0.55 0.08 165);
-  --chart-2: oklch(0.65 0.18 25);
-  --chart-3: oklch(0.58 0.12 85);
-  --chart-4: oklch(0.50 0.10 290);
-  --chart-5: oklch(0.55 0.08 165);
-  --sidebar: oklch(0.22 0.015 165);
-  --sidebar-foreground: oklch(0.96 0.005 80);
-  --sidebar-primary: oklch(0.55 0.08 165);
-  --sidebar-primary-foreground: oklch(1.0 0 0);
-  --sidebar-accent: oklch(0.55 0.08 165);
-  --sidebar-accent-foreground: oklch(1.0 0 0);
-  --sidebar-border: oklch(0.32 0.02 165);
-  --sidebar-ring: oklch(0.55 0.08 165);
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: 'JetBrains Mono', Inconsolata, monospace;
-  --radius: 0.625rem;
-  --shadow-2xs: 0 1px 2px 0 oklch(0.0 0 0 / 0.15);
-  --shadow-xs: 0 1px 3px 0 oklch(0.0 0 0 / 0.20);
-  --shadow-sm: 0 2px 6px -1px oklch(0.0 0 0 / 0.25), 0 1px 2px -1px oklch(0.0 0 0 / 0.15);
-  --shadow: 0 4px 12px -2px oklch(0.0 0 0 / 0.30), 0 2px 4px -2px oklch(0.0 0 0 / 0.15);
-  --shadow-md: 0 6px 16px -3px oklch(0.0 0 0 / 0.35), 0 3px 6px -3px oklch(0.0 0 0 / 0.20);
-  --shadow-lg: 0 10px 24px -4px oklch(0.0 0 0 / 0.40), 0 4px 8px -4px oklch(0.0 0 0 / 0.20);
-  --shadow-xl: 0 16px 40px -6px oklch(0.0 0 0 / 0.45), 0 6px 12px -4px oklch(0.0 0 0 / 0.20);
-  --shadow-2xl: 0 24px 48px -8px oklch(0.0 0 0 / 0.55);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  color-scheme: light;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-sheet: var(--sheet);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-airmail-red: var(--airmail-red);
+  --color-airmail-red-deep: var(--airmail-red-deep);
+  --color-airmail-navy: var(--airmail-navy);
+  --color-postmark: var(--postmark);
+  --color-brand-teal: var(--brand-teal);
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Literata', Georgia, 'Times New Roman', serif;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
-
-  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
-  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
-  --tracking-normal: var(--tracking-normal);
-  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
-  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
-  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
 }
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  letter-spacing: var(--tracking-normal);
-}
-
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  html {
+    scroll-behavior: smooth;
+    scrollbar-color: var(--ink-faint) var(--paper);
+    -webkit-text-size-adjust: 100%;
   }
+
   body {
-    @apply bg-background text-foreground;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    caret-color: var(--airmail-red);
+  }
+
+  ::selection {
+    background: var(--airmail-navy);
+    color: var(--sheet);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-sans);
+    font-stretch: 112.5%;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--airmail-navy);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  img {
+    color: var(--ink-faint);
+  }
+
+  input,
+  textarea,
+  select {
+    scroll-margin-top: 7rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-@keyframes fadeInUp {
+@layer components {
+  /* Small postal caps, used for postmarks, meta lines and form labels. Never as a heading eyebrow. */
+  .postal {
+    font-family: var(--font-sans);
+    font-stretch: 125%;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  /* Red and navy chevrons, the airmail border. */
+  .airmail-stripes {
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--airmail-red) 0 12px,
+      var(--sheet) 12px 18px,
+      var(--airmail-navy) 18px 30px,
+      var(--sheet) 30px 36px
+    );
+  }
+
+  .airmail-frame {
+    border: 8px solid transparent;
+    border-image: repeating-linear-gradient(
+      -45deg,
+      var(--airmail-red) 0 12px,
+      var(--sheet) 12px 18px,
+      var(--airmail-navy) 18px 30px,
+      var(--sheet) 30px 36px
+    ) 8;
+  }
+
+  /* Perforated postage stamp edge. Interior stays solid; only the rim is punched. */
+  .stamp {
+    --hole: 5px;
+    --step: 15px;
+    background: var(--sheet);
+    padding: calc(var(--hole) + 9px);
+    -webkit-mask:
+      linear-gradient(#000 0 0) center / calc(100% - 2 * var(--hole)) calc(100% - 2 * var(--hole)) no-repeat,
+      radial-gradient(circle, #0000 calc(var(--hole) - 0.5px), #000 var(--hole)) calc(var(--step) / -2) calc(var(--step) / -2) / var(--step) var(--step) round;
+    mask:
+      linear-gradient(#000 0 0) center / calc(100% - 2 * var(--hole)) calc(100% - 2 * var(--hole)) no-repeat,
+      radial-gradient(circle, #0000 calc(var(--hole) - 0.5px), #000 var(--hole)) calc(var(--step) / -2) calc(var(--step) / -2) / var(--step) var(--step) round;
+  }
+
+  .stamp-shadow {
+    filter: drop-shadow(0 10px 18px rgb(22 34 74 / 0.16)) drop-shadow(0 2px 3px rgb(22 34 74 / 0.12));
+  }
+
+  /* Long-form letter and article text. */
+  .letter-prose {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--ink);
+    max-width: 68ch;
+  }
+
+  .letter-prose > * + * {
+    margin-top: 1.15em;
+  }
+
+  .letter-prose h2,
+  .letter-prose h3 {
+    margin-top: 2em;
+    font-size: 1.5rem;
+  }
+
+  .letter-prose a {
+    color: var(--airmail-red);
+    text-decoration: underline;
+  }
+
+  .letter-prose img {
+    border-radius: 2px;
+    margin-block: 2em;
+    width: 100%;
+    height: auto;
+  }
+
+  .letter-prose ul,
+  .letter-prose ol {
+    padding-left: 1.4em;
+  }
+
+  .letter-prose ul {
+    list-style: disc;
+  }
+
+  .letter-prose ol {
+    list-style: decimal;
+  }
+
+  .letter-prose blockquote {
+    font-style: italic;
+    padding-left: 1.2em;
+    border-left: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  .press {
+    transition: transform 160ms var(--ease-out), background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+
+  .press:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Signature moment: the postmark strikes the stamp once. */
+@keyframes postmark-strike {
+  0% {
+    opacity: 0;
+    transform: rotate(-6deg) scale(1.35);
+  }
+  60% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0.9;
+    transform: rotate(-14deg) scale(1);
+  }
+}
+
+.postmark-strike {
+  animation: postmark-strike 420ms var(--ease-out) 520ms both;
+}
+
+@keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translateY(10px);
   }
 }
 
-@keyframes growWidth {
-  from {
-    width: 0%;
+.rise-in {
+  animation: rise-in 600ms var(--ease-out) both;
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.55;
   }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+.skeleton {
+  background: var(--paper-deep);
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
 }
 
-.animate-grow-width {
-  animation: growWidth 1s ease-out forwards;
-}
+@media (prefers-reduced-motion: reduce) {
+  .postmark-strike {
+    animation: none;
+    opacity: 0.9;
+    transform: rotate(-14deg);
+  }
 
-/* Family portrait card styles */
-.portrait-card {
-  position: relative;
-  isolation: isolate;
-}
+  .rise-in {
+    animation-name: none;
+  }
 
-.portrait-card::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 1.65rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.5s ease;
-}
-
-.portrait-card:hover::before {
-  opacity: 0.5;
-}
-
-.portrait-card .portrait-img {
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease;
-}
-
-.portrait-card:hover .portrait-img {
-  transform: scale(1.02);
-  box-shadow: 0 20px 50px -12px oklch(0.2 0.01 60 / 0.3);
-}
-
-.portrait-card .portrait-badge {
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
-}
-
-.portrait-card:hover .portrait-badge {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -4px oklch(0.2 0.01 60 / 0.25);
-}
-
-/* Decorative dots pattern */
-.portrait-dots {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  background-image: radial-gradient(circle, var(--accent) 1.5px, transparent 1.5px);
-  background-size: 12px 12px;
-  opacity: 0.3;
-  z-index: -1;
-  transition: opacity 0.5s ease;
-}
-
-.portrait-card:hover .portrait-dots {
-  opacity: 0.5;
-}
-
-/* Decorative corner accent */
-.portrait-corner {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border: 3px solid var(--accent);
-  opacity: 0.4;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.portrait-card:hover .portrait-corner {
-  opacity: 0.7;
-  transform: translate(-4px, -4px);
-}
-
-/* Image overlay gradient on hover */
-.portrait-overlay {
-  position: absolute;
-  inset: 0;
-  border-radius: 1.5rem;
-  background: linear-gradient(
-    to top,
-    oklch(0.2 0.02 165 / 0.4) 0%,
-    transparent 50%
-  );
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-
-.portrait-card:hover .portrait-overlay {
-  opacity: 1;
-}
-
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(2deg); }
-}
-
-.portrait-float {
-  animation: floatSlow 4s ease-in-out infinite;
+  .skeleton {
+    animation: none;
+  }
 }

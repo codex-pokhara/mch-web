@@ -7,9 +7,11 @@ import {
 import AuthContext from '@/contexts/auth';
 
 function ProtectedRoutes() {
-    const auth = useContext(AuthContext);
-    // eslint-disable-next-line no-extra-boolean-cast
-    return !!auth.state ? <Outlet /> : <Navigate to="/login" />;
+    const { state, status } = useContext(AuthContext);
+    if (status === 'checking') {
+        return null;
+    }
+    return state ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
 export default ProtectedRoutes;

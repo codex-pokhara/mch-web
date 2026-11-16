@@ -10,19 +10,35 @@ import { Toaster } from 'sonner';
 
 import App from './App/App';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 5 * 60 * 1000,
+            retry: 1,
+            refetchOnWindowFocus: false,
+        },
+    },
+});
 
-const webappRootId = 'root';
-const webappRootElement = document.getElementById(webappRootId);
-if (webappRootElement === undefined || webappRootElement === null) {
-    // eslint-disable-next-line no-console
-    console.error(`Could not find html element with id '${webappRootId}'`);
-} else {
-    ReactDOM.createRoot(webappRootElement).render(
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+    ReactDOM.createRoot(rootElement).render(
         <React.StrictMode>
             <QueryClientProvider client={queryClient}>
                 <App />
-                <Toaster />
+                <Toaster
+                    position="bottom-center"
+                    toastOptions={{
+                        style: {
+                            background: 'var(--ink)',
+                            color: 'var(--sheet)',
+                            border: 'none',
+                            borderRadius: '3px',
+                            fontFamily: 'Archivo, sans-serif',
+                        },
+                    }}
+                />
             </QueryClientProvider>
         </React.StrictMode>,
     );

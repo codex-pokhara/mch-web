@@ -1,235 +1,118 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {
-    Calendar,
-    MapPin,
-} from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
-import HeroSection from '@/components/HeroSection';
-import { Badge } from '@/components/ui/badge';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import PageHeader from '@/components/PageHeader';
+import DateCancel from '@/components/Postal/DateCancel';
+import Postmark from '@/components/Postal/Postmark';
+import SafeImage from '@/components/SafeImage';
 import {
-    Card,
-    CardContent,
-} from '@/components/ui/card';
-import { baseRequest } from '@/lib/base';
+    EmptyNote,
+    ErrorNote,
+    SkeletonGrid,
+} from '@/components/States';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import {
+    type EventItem,
+    getEvents,
+    queryKeys,
+} from '@/lib/api';
+import {
+    excerpt,
+    formatDateRange,
+} from '@/lib/format';
 
-interface Event {
-  id: number;
-  title: string;
-  slug: string;
-  cover_image: string;
-  description: string;
-  start_date: string;
-  end_date: string;
-  location: string;
-  event_type: string;
-  created_at: string;
-  updated_at: string;
+/** Shown when an event has no cover, or its file fails to load: a postmark of place and year. */
+function NoPhoto({ event }: { event: EventItem }) {
+    const year = new Date(event.start_date).getFullYear();
+    const place = (event.location || 'Dadagaun').toUpperCase();
+    return (
+        <span className="flex h-full w-full items-center justify-center">
+            <Postmark
+                ringTop={`${place} · NEPAL`}
+                small="EVENT"
+                big={Number.isNaN(year) ? 'OHCDS' : String(year)}
+                className="w-24 -rotate-12 opacity-80"
+            />
+        </span>
+    );
 }
 
-interface EventAPIResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Event[];
+function EventRow({ event }: { event: EventItem }) {
+    return (
+        <li className="border-b border-ink/15">
+            <Link to={`/event/${event.id}`} className="group grid gap-6 py-8 sm:grid-cols-[5rem_1fr] md:grid-cols-[5rem_1fr_16rem] md:items-center md:gap-10">
+                <DateCancel value={event.start_date} className="size-20" />
+                <span className="block">
+                    {event.event_type && <span className="postal text-airmail-red">{event.event_type}</span>}
+                    <span className="mt-1.5 block font-sans text-2xl font-semibold text-ink [font-stretch:106%] group-hover:underline">
+                        {event.title}
+                    </span>
+                    <span className="mt-2 block text-ink-soft">{formatDateRange(event.start_date, event.end_date)}</span>
+                    {event.location && (
+                        <span className="mt-1 flex items-center gap-1.5 text-ink-soft">
+                            <MapPin className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                            {event.location}
+                        </span>
+                    )}
+                    <span className="mt-3 block max-w-[60ch] text-ink-soft">{excerpt(event.description, 140)}</span>
+                </span>
+                <span className="hidden aspect-[4/3] overflow-hidden rounded-[2px] bg-paper-deep md:block">
+                    <SafeImage
+                        src={event.cover_image}
+                        alt=""
+                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                        loading="lazy"
+                        decoding="async"
+                        fallback={<NoPhoto event={event} />}
+                    />
+                </span>
+            </Link>
+        </li>
+    );
 }
-
-// Events service for API calls
-const eventService = {
-    async getEvents(): Promise<EventAPIResponse> {
-        const response = await baseRequest({
-            url: '/cms/events/',
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch events: ${response.statusText}`);
-        }
-
-        return response.data;
-    },
-};
 
 function Events() {
-    const title = 'Upcoming Events';
-    const description = 'Join our community and make a difference with every event. Browse our upcoming activities and find your next opportunity to support Mountain Children Home.';
-
+    usePageTitle('Events');
     const {
-        data: eventResponse,
-        isLoading,
+        data,
+        isPending,
         isError,
         error,
-    } = useQuery({
-        queryKey: ['events'],
-        queryFn: eventService.getEvents,
-    });
+        refetch,
+    } = useQuery({ queryKey: queryKeys.events, queryFn: getEvents });
 
-    const events = eventResponse?.results || [];
+    const events = data?.results ?? [];
 
-    const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
-    // Loading state
-    if (isLoading) {
-        return (
-            <>
-                <HeroSection title={title} description={description} />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <Card className="overflow-hidden">
-                            <div className="w-full h-48 bg-muted animate-pulse" />
-                            <CardContent className="p-6">
-                                <div className="h-6 bg-muted rounded animate-pulse mb-3" />
-                                <div className="space-y-2 mb-4">
-                                    <div className="h-4 bg-muted rounded animate-pulse" />
-                                    <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
-                                </div>
-                                <div className="space-y-2 mb-4">
-                                    <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
-                                    <div className="h-4 bg-muted rounded animate-pulse w-1/3" />
-                                </div>
-                                <div className="h-10 bg-muted rounded animate-pulse" />
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-            </>
+    let body = null;
+    if (isPending) {
+        body = <SkeletonGrid count={3} itemClassName="h-28" className="lg:grid-cols-1" />;
+    } else if (isError) {
+        body = <ErrorNote message={error.message} onRetry={() => refetch()} />;
+    } else if (events.length === 0) {
+        body = (
+            <EmptyNote title="No events on the calendar right now.">
+                Follow us on Facebook or write to us to hear about the next one.
+            </EmptyNote>
         );
-    }
-
-    // Error state
-    if (isError) {
-        return (
-            <>
-                <HeroSection title={title} description={description} />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="text-center">
-                        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6">
-                            <h3 className="text-lg font-semibold text-destructive mb-2">
-                                Failed to Load Events
-                            </h3>
-                            <p className="text-muted-foreground mb-4">
-                                {error instanceof Error ? error.message : 'An unexpected error occurred'}
-                            </p>
-                            <button
-                                type="button"
-                                onClick={() => window.location.reload()}
-                                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-                            >
-                                Try Again
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
-    // Empty state
-    if (events.length === 0) {
-        return (
-            <>
-                <HeroSection title={title} description={description} />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="text-center">
-                        <div className="bg-muted/50 rounded-lg p-12">
-                            <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold text-foreground mb-2">
-                                No Events Available
-                            </h3>
-                            <p className="text-muted-foreground">
-                                There are currently no upcoming events. Check back soon for new
-                                opportunities to get involved!
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </>
+    } else {
+        body = (
+            <ul className="border-t border-ink/20">
+                {events.map((event) => <EventRow key={event.id} event={event} />)}
+            </ul>
         );
     }
 
     return (
         <>
-            <HeroSection title={title} description={description} />
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {events.map((event) => (
-                        <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 pt-0">
-                            <div className="relative">
-                                <img
-                                    src={event.cover_image}
-                                    alt={event.title}
-                                    className="w-full h-48 object-cover"
-                                    onError={(e) => {
-                                        const target = e.target as HTMLImageElement;
-                                        target.src = 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-4.0.3&w=800&h=600&fit=crop';
-                                    }}
-                                />
-                                <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
-                                    {event.event_type}
-                                </Badge>
-                            </div>
-
-                            <CardContent className="p-6">
-                                <h3 className="text-xl font-semibold text-foreground mb-3">
-                                    {event.title}
-                                </h3>
-
-                                <div
-                                    className="text-muted-foreground mb-4 line-clamp-3"
-                                    // eslint-disable-next-line react/no-danger
-                                    dangerouslySetInnerHTML={{ __html: event.description }}
-                                />
-
-                                <div className="space-y-2 mb-4">
-                                    <div className="flex items-center text-sm text-muted-foreground">
-                                        <Calendar className="w-4 h-4 mr-2" />
-                                        {formatDate(event.start_date)}
-                                        {event.start_date !== event.end_date && (
-                                            <span>
-                                                {' '}
-                                                -
-                                                {formatDate(event.end_date)}
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    <div className="flex items-center text-sm text-muted-foreground">
-                                        <MapPin className="w-4 h-4 mr-2" />
-                                        {event.location}
-                                    </div>
-                                </div>
-
-                                <Link
-                                    to={`/event/${event.id}`}
-                                    className="inline-flex items-center justify-center w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-medium"
-                                >
-                                    Learn More
-                                </Link>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-
-                {/* Pagination info if needed */}
-                {eventResponse && eventResponse.count > events.length && (
-                    <div className="text-center mt-8">
-                        <p className="text-muted-foreground">
-                            Showing
-                            {' '}
-                            {events.length}
-                            {' '}
-                            of
-                            {' '}
-                            {eventResponse.count}
-                            {' '}
-                            events
-                        </p>
-                    </div>
-                )}
-            </div>
+            <PageHeader
+                title="Events."
+                lead="Celebrations, fundraisers and open days. Come and meet the children, or support them from wherever you are."
+            />
+            <section className="py-16 md:py-20">
+                <MaxWidthWrapper>{body}</MaxWidthWrapper>
+            </section>
         </>
     );
 }

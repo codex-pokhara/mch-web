@@ -1,196 +1,123 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
+import {
+    keepPreviousData,
+    useQuery,
+} from '@tanstack/react-query';
 
-import GallerySection, { type Album, type Photo } from './GallerySection';
+import AlbumView from './AlbumView';
+import Pagination from './Pagination';
 
-import HeroSection from '@/components/HeroSection';
-import { baseRequest } from '@/lib/base';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import PageHeader from '@/components/PageHeader';
+import SafeImage from '@/components/SafeImage';
+import {
+    EmptyNote,
+    ErrorNote,
+    SkeletonGrid,
+} from '@/components/States';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import {
+    type Album,
+    ALBUMS_PAGE_SIZE,
+    getAlbums,
+    queryKeys,
+} from '@/lib/api';
 
-interface PaginatedResponse<T> {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: T[];
+function AlbumCard({ album, onOpen }: { album: Album; onOpen: () => void }) {
+    return (
+        <li>
+            <button type="button" onClick={onOpen} className="group block w-full text-left">
+                <span className="block overflow-hidden rounded-[2px] bg-paper-deep">
+                    <SafeImage
+                        src={album.cover_image}
+                        alt=""
+                        className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </span>
+                <span className="mt-4 flex items-baseline justify-between gap-4">
+                    <span className="font-sans text-xl font-semibold text-ink [font-stretch:106%] group-hover:underline">
+                        {album.title}
+                    </span>
+                    <span className="postal shrink-0 text-ink-faint tabular">
+                        {album.photo_count}
+                        {' '}
+                        {album.photo_count === 1 ? 'photo' : 'photos'}
+                    </span>
+                </span>
+            </button>
+        </li>
+    );
 }
 
-const ALBUMS_PAGE_SIZE = 10;
-const PHOTOS_PAGE_SIZE = 12;
-
-const galleryService = {
-    async getAlbums(page: number): Promise<PaginatedResponse<Album>> {
-        const response = await baseRequest({
-            url: `/cms/albums/?page=${page}&size=${ALBUMS_PAGE_SIZE}`,
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch albums: ${response.statusText}`);
-        }
-
-        return response.data;
-    },
-
-    async getPhotos(albumId: number, page: number): Promise<PaginatedResponse<Photo>> {
-        const response = await baseRequest({
-            url: `/cms/photos/?album=${albumId}&page=${page}&size=${PHOTOS_PAGE_SIZE}`,
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch photos: ${response.statusText}`);
-        }
-
-        return response.data;
-    },
-};
-
 function Gallery() {
-    const [selectedImage, setSelectedImage] = useState<number | null>(null);
-    const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
-    const [albumsPage, setAlbumsPage] = useState(1);
-    const [photosPage, setPhotosPage] = useState(1);
-
-    const title = 'Our Gallery';
-    const description = 'Explore the moments of joy, learning, and growth at Mountain Children Home through our photo gallery.';
+    usePageTitle('Gallery');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [page, setPage] = useState(1);
+    const albumParam = Number(searchParams.get('album'));
+    const albumId = Number.isInteger(albumParam) && albumParam > 0 ? albumParam : null;
 
     const {
-        data: albumsResponse,
-        isLoading: albumsLoading,
-        isError: albumsError,
-        error: albumsErrorObj,
+        data,
+        isPending,
+        isError,
+        error,
+        refetch,
     } = useQuery({
-        queryKey: ['albums', albumsPage],
-        queryFn: () => galleryService.getAlbums(albumsPage),
+        queryKey: queryKeys.albums(page),
+        queryFn: () => getAlbums(page),
+        placeholderData: keepPreviousData,
     });
 
-    const {
-        data: photosResponse,
-        isLoading: photosLoading,
-    } = useQuery({
-        queryKey: ['photos', selectedAlbum?.id, photosPage],
-        queryFn: () => galleryService.getPhotos(selectedAlbum!.id, photosPage),
-        enabled: !!selectedAlbum,
-    });
+    const albums = data?.results ?? [];
+    const totalPages = data ? Math.ceil(data.count / ALBUMS_PAGE_SIZE) : 0;
+    const selected = albums.find((album) => album.id === albumId);
 
-    const albums = albumsResponse?.results || [];
-    // eslint-disable-next-line max-len
-    const albumsTotalPages = albumsResponse ? Math.ceil(albumsResponse.count / ALBUMS_PAGE_SIZE) : 0;
-
-    const photos = photosResponse?.results || [];
-    // eslint-disable-next-line max-len
-    const photosTotalPages = photosResponse ? Math.ceil(photosResponse.count / PHOTOS_PAGE_SIZE) : 0;
-
-    const handleSelectAlbum = (album: Album) => {
-        setSelectedAlbum(album);
-        setPhotosPage(1);
-        setSelectedImage(null);
+    const openAlbum = (album: Album) => {
+        setSearchParams({ album: String(album.id) });
+        window.scrollTo({ top: 0 });
     };
 
-    const handleBackToAlbums = () => {
-        setSelectedAlbum(null);
-        setPhotosPage(1);
-        setSelectedImage(null);
-    };
-
-    const openImage = (index: number) => {
-        setSelectedImage(index);
-    };
-
-    const closeImage = () => {
-        setSelectedImage(null);
-    };
-
-    const nextImage = () => {
-        if (selectedImage !== null && selectedImage < photos.length - 1) {
-            setSelectedImage(selectedImage + 1);
-        }
-    };
-
-    const prevImage = () => {
-        if (selectedImage !== null && selectedImage > 0) {
-            setSelectedImage(selectedImage - 1);
-        }
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'ArrowRight') nextImage();
-        if (e.key === 'ArrowLeft') prevImage();
-        if (e.key === 'Escape') closeImage();
-    };
-
-    if (albumsLoading) {
-        return (
-            <>
-                <HeroSection title={title} description={description} />
-                <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-center justify-center min-h-[400px]">
-                        <div className="text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
-                            <p className="text-muted-foreground">Loading gallery...</p>
-                        </div>
-                    </div>
-                </div>
-            </>
+    let body = null;
+    if (albumId) {
+        body = (
+            <AlbumView
+                key={albumId}
+                albumId={albumId}
+                title={selected?.title ?? 'Album'}
+                onBack={() => setSearchParams({})}
+            />
         );
-    }
-
-    if (albumsError) {
-        return (
+    } else if (isPending) {
+        body = <SkeletonGrid count={6} />;
+    } else if (isError) {
+        body = <ErrorNote message={error.message} onRetry={() => refetch()} />;
+    } else if (albums.length === 0) {
+        body = <EmptyNote title="No albums yet.">Photos from the home will appear here soon.</EmptyNote>;
+    } else {
+        body = (
             <>
-                <HeroSection title={title} description={description} />
-                <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-center justify-center min-h-[400px]">
-                        <div className="text-center">
-                            <p className="text-red-600 mb-4">Failed to load gallery</p>
-                            <p className="text-muted-foreground">
-                                {albumsErrorObj instanceof Error ? albumsErrorObj.message : 'An unexpected error occurred'}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
-    if (albums.length === 0) {
-        return (
-            <>
-                <HeroSection title={title} description={description} />
-                <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-center justify-center min-h-[400px]">
-                        <div className="text-center">
-                            <p className="text-muted-foreground">No albums found</p>
-                        </div>
-                    </div>
-                </div>
+                <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+                    {albums.map((album) => (
+                        <AlbumCard key={album.id} album={album} onOpen={() => openAlbum(album)} />
+                    ))}
+                </ul>
+                <Pagination label="Album pages" page={page} totalPages={totalPages} onPageChange={setPage} />
             </>
         );
     }
 
     return (
         <>
-            <HeroSection title={title} description={description} />
-
-            <GallerySection
-                selectedAlbum={selectedAlbum}
-                onSelectAlbum={handleSelectAlbum}
-                onBackToAlbums={handleBackToAlbums}
-                albums={albums}
-                albumsPage={albumsPage}
-                albumsTotalPages={albumsTotalPages}
-                onAlbumsPageChange={setAlbumsPage}
-                photos={photos}
-                photosLoading={photosLoading}
-                photosPage={photosPage}
-                photosTotalPages={photosTotalPages}
-                onPhotosPageChange={setPhotosPage}
-                selectedImage={selectedImage}
-                openImage={openImage}
-                closeImage={closeImage}
-                handleKeyDown={handleKeyDown}
-                prevImage={prevImage}
-                nextImage={nextImage}
+            <PageHeader
+                title="Gallery."
+                lead="Moments of joy, learning and growing up at Mountain Children's Home, sorted into albums."
             />
+            <section className="py-16 md:py-20">
+                <MaxWidthWrapper>{body}</MaxWidthWrapper>
+            </section>
         </>
     );
 }
